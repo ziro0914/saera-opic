@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미야자키 & 가고시마 7박 8일 가족여행</title>
+<style>
+:root {
+  --primary: #1B4F72;
+  --primary-light: #2980B9;
+  --accent: #F39C12;
+  --accent-light: #F5B041;
+  --bg: #F5F7FA;
+  --card-bg: #FFFFFF;
+  --text: #2C3E50;
+  --text-light: #7F8C8D;
+  --border: #E0E4E8;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 4px 20px rgba(0,0,0,0.12);
+  --timeline-line: #D5DBDB;
+  --tip-bg: #FEF9E7;
+  --tip-border: #F39C12;
+  --parking-bg: #EBF5FB;
+  --parking-border: #2980B9;
+  --move-color: #95A5A6;
+  --radius: 12px;
+  --tab-height: 56px;
+}
+[data-theme="dark"] {
+  --bg: #1A1A2E;
+  --card-bg: #16213E;
+  --text: #E0E0E0;
+  --text-light: #A0A0A0;
+  --border: #2C3E50;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 4px 20px rgba(0,0,0,0.4);
+  --timeline-line: #34495E;
+  --tip-bg: #2C2200;
+  --tip-border: #F39C12;
+  --parking-bg: #0D1F2D;
+  --parking-border: #2980B9;
+  --move-color: #5D6D7E;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.trip-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1A5276 50%, #154360 100%);
+  color: #fff;
+  padding: 32px 16px 24px;
+  text-align: center;
+  position: relative;
+}
+.trip-header h1 { font-size: 1.6rem; margin-bottom: 8px; letter-spacing: -0.5px; }
+.trip-header .subtitle { font-size: 0.95rem; opacity: 0.9; margin-bottom: 16px; }
+.header-info { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; font-size: 0.85rem; opacity: 0.9; }
+.header-info span { display: inline-flex; align-items: center; gap: 4px; }
+.theme-toggle {
+  position: absolute; top: 16px; right: 16px;
+  background: rgba(255,255,255,0.2); border: none; color: #fff;
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+  font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.3); }
+
+/* Summary Tabs (숙소/맛집) */
+.summary-tabs {
+  display: flex; gap: 8px; padding: 12px 16px;
+  background: var(--card-bg); border-bottom: 1px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.summary-tab-btn {
+  padding: 8px 16px; border: 1px solid var(--border); border-radius: 20px;
+  background: var(--card-bg); color: var(--text); cursor: pointer;
+  font-size: 0.85rem; white-space: nowrap; transition: all 0.3s;
+}
+.summary-tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Summary Sections */
+.summary-section {
+  display: none; padding: 16px;
+  animation: fadeIn 0.3s ease;
+}
+.summary-section.active { display: block; }
+.summary-card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 16px;
+  margin-bottom: 12px; box-shadow: var(--shadow); border-left: 4px solid var(--primary);
+}
+.summary-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 0.95rem; }
+.summary-card .info-row { display: flex; gap: 8px; font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px; flex-wrap: wrap; }
+.food-tag { display: inline-block; background: var(--accent); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; }
+
+/* Day Tabs */
+.tab-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--card-bg);
+  border-bottom: 2px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  position: relative;
+  transition: color 0.3s;
+  text-align: center;
+  min-width: 90px;
+}
+.tab-btn .day-label { font-weight: 700; font-size: 0.9rem; display: block; color: var(--text); }
+.tab-btn .day-date { font-size: 0.72rem; color: var(--text-light); }
+.tab-btn::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0;
+  transition: width 0.3s;
+}
+.tab-btn.active { color: var(--primary); }
+.tab-btn.active .day-label { color: var(--primary); }
+.tab-btn.active::after { width: 70%; }
+
+/* Day Content */
+.day-panel { padding: 16px 0; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Day Route Map */
+.day-route-map {
+  margin-bottom: 20px; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); background: var(--card-bg);
+}
+.day-route-map .route-title {
+  padding: 10px 16px; font-size: 0.85rem; font-weight: 700;
+  color: var(--primary); display: flex; align-items: center; gap: 6px;
+}
+.day-route-map iframe {
+  width: 100%; height: 220px; border: none; display: block;
+}
+.day-route-map .route-link {
+  padding: 8px 16px; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.8rem; color: var(--primary-light);
+}
+@media (max-width: 768px) { .day-route-map iframe { height: 180px; } }
+
+.day-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; padding: 20px; border-radius: var(--radius); margin-bottom: 20px;
+  text-align: center;
+}
+.day-header h2 { font-size: 1.3rem; margin-bottom: 4px; }
+.day-header .day-summary { font-size: 0.85rem; opacity: 0.9; }
+.day-stats {
+  display: flex; justify-content: center; gap: 24px; margin-top: 12px;
+  font-size: 0.8rem; opacity: 0.85;
+}
+
+/* Timeline */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before {
+  content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+  width: 2px; background: var(--timeline-line);
+}
+.timeline-item {
+  position: relative; margin-bottom: 4px;
+  opacity: 0; animation: slideIn 0.4s ease forwards;
+}
+.timeline-item:nth-child(1) { animation-delay: 0.05s; }
+.timeline-item:nth-child(2) { animation-delay: 0.1s; }
+.timeline-item:nth-child(3) { animation-delay: 0.15s; }
+.timeline-item:nth-child(4) { animation-delay: 0.2s; }
+.timeline-item:nth-child(5) { animation-delay: 0.25s; }
+.timeline-item:nth-child(6) { animation-delay: 0.3s; }
+.timeline-item:nth-child(7) { animation-delay: 0.35s; }
+.timeline-item:nth-child(8) { animation-delay: 0.4s; }
+.timeline-item:nth-child(9) { animation-delay: 0.45s; }
+.timeline-item:nth-child(10) { animation-delay: 0.5s; }
+.timeline-item:nth-child(11) { animation-delay: 0.55s; }
+.timeline-item:nth-child(12) { animation-delay: 0.6s; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+.timeline-dot {
+  position: absolute; left: -24px; top: 18px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--primary); border: 2px solid var(--card-bg);
+  z-index: 1;
+}
+
+/* Move indicator */
+.move-indicator {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0 8px 8px; color: var(--move-color);
+  font-size: 0.82rem; position: relative;
+}
+.move-indicator .timeline-dot { background: var(--move-color); width: 8px; height: 8px; top: 14px; left: -22px; }
+.move-indicator::before {
+  content: ''; position: absolute; left: -18px; top: 0; bottom: 0;
+  width: 2px; border-left: 2px dashed var(--move-color); background: transparent;
+}
+
+/* Place Card */
+.place-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden;
+  transition: box-shadow 0.3s, transform 0.2s;
+  margin-bottom: 4px;
+}
+.place-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+.card-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; cursor: pointer;
+}
+.card-icon { font-size: 1.4rem; flex-shrink: 0; }
+.card-title-wrap { flex: 1; min-width: 0; }
+.card-time { font-size: 0.78rem; color: var(--accent); font-weight: 700; }
+.card-name { font-size: 1rem; font-weight: 700; }
+.card-name-jp { font-size: 0.8rem; color: var(--text-light); }
+.card-toggle { font-size: 1.2rem; color: var(--text-light); transition: transform 0.3s; flex-shrink: 0; }
+.card-toggle.open { transform: rotate(180deg); }
+
+.card-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s;
+}
+.card-body.open { max-height: 2000px; padding: 0 16px 16px; }
+
+.card-body .info-grid {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 12px;
+  font-size: 0.85rem; margin-bottom: 12px;
+}
+.info-label { color: var(--text-light); font-weight: 500; white-space: nowrap; }
+.info-value { word-break: break-all; }
+
+.copy-wrap { display: inline-flex; align-items: center; gap: 6px; }
+.copy-btn {
+  background: var(--primary); color: #fff; border: none;
+  padding: 2px 8px; border-radius: 4px; font-size: 0.72rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.copy-btn:hover { background: var(--primary-light); }
+.copy-btn.copied { background: #27AE60; }
+
+.map-embed {
+  width: 100%; height: 200px; border: none; border-radius: 8px;
+  margin: 8px 0; background: var(--border);
+}
+.map-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.map-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border-radius: 6px; font-size: 0.8rem;
+  background: var(--primary); color: #fff; transition: background 0.2s;
+}
+.map-link:hover { background: var(--primary-light); text-decoration: none; }
+
+/* Tip Box */
+.tip-box {
+  background: var(--tip-bg); border-left: 4px solid var(--tip-border);
+  padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 8px 0;
+  font-size: 0.85rem;
+}
+.tip-box .tip-title { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+
+/* Parking Box */
+.parking-box {
+  background: var(--parking-bg); border-left: 4px solid var(--parking-border);
+  padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 8px 0;
+  font-size: 0.85rem;
+}
+.parking-box .parking-title { font-weight: 700; color: var(--primary-light); margin-bottom: 4px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trip-header h1 { font-size: 1.3rem; }
+  .tab-btn { padding: 10px 12px; min-width: 80px; }
+  .tab-btn .day-label { font-size: 0.82rem; }
+  .container { padding: 0 8px; }
+  .day-header h2 { font-size: 1.1rem; }
+  .map-embed { height: 160px; }
+  .info-grid { grid-template-columns: 1fr !important; }
+  .info-label { font-weight: 700; }
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: #2C3E50; color: #fff; padding: 10px 24px; border-radius: 24px;
+  font-size: 0.85rem; z-index: 999; transition: transform 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Scroll to top */
+.scroll-top {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--primary); color: #fff; border: none;
+  font-size: 1.2rem; cursor: pointer; display: none;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 90;
+  transition: background 0.3s;
+}
+.scroll-top:hover { background: var(--primary-light); }
+.scroll-top.visible { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="trip-header">
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="다크모드 토글">🌙</button>
+  <h1>🇯🇵 미야자키 & 가고시마 7박 8일</h1>
+  <div class="subtitle">가족과 함께하는 남큐슈 드라이브 여행</div>
+  <div class="header-info">
+    <span>👨‍👩‍👦 태호, 와이프, 준혁이(31개월)</span>
+    <span>📅 2025.05.24(일) ~ 05.31(일)</span>
+    <span>✈️ 아시아나항공 미야자키 직항</span>
+    <span>🚗 렌터카 7박 8일</span>
+  </div>
+</header>
+
+<!-- Summary Tabs -->
+<div class="summary-tabs">
+  <button class="summary-tab-btn active" onclick="showSummary('itinerary')">📋 일정</button>
+  <button class="summary-tab-btn" onclick="showSummary('hotels')">🏨 숙소</button>
+  <button class="summary-tab-btn" onclick="showSummary('food')">🍜 맛집</button>
+  <button class="summary-tab-btn" onclick="showSummary('route')">🗺️ 전체경로</button>
+</div>
+
+<!-- Summary: Itinerary (default, shows day tabs) -->
+<div id="summary-itinerary" class="summary-section active"></div>
+
+<!-- Summary: Hotels -->
+<div id="summary-hotels" class="summary-section">
+  <div class="container">
+    <div class="summary-card">
+      <h4>🏨 피닉스 시가이아 리조트 (3박)</h4>
+      <div class="info-row">📅 5/24(일) ~ 5/27(수)</div>
+      <div class="info-row">📍 〒880-8545 宮崎県宮崎市山崎町浜山</div>
+      <div class="info-row">📞 0985-21-1111</div>
+      <div class="info-row">⏰ 체크인 15:00 / 체크아웃 11:00</div>
+      <div class="info-row">🅿️ 무료 주차장 (숙박객)</div>
+      <div class="info-row">✨ 패밀리룸, 영유아 친화 시설, 해변 리조트</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.google.com/maps?q=31.9553,131.4697" target="_blank" rel="noopener">📍 지도보기</a>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9553,131.4697" target="_blank" rel="noopener">🧭 네비게이션</a>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h4>🏨 시로야마 호텔 가고시마 (3박)</h4>
+      <div class="info-row">📅 5/27(수) ~ 5/30(토)</div>
+      <div class="info-row">📍 〒890-8586 鹿児島県鹿児島市新照院町41-1</div>
+      <div class="info-row">📞 099-224-2211</div>
+      <div class="info-row">⏰ 체크인 14:00 / 체크아웃 11:00</div>
+      <div class="info-row">🅿️ 무료 주차장 (숙박객)</div>
+      <div class="info-row">✨ 사쿠라지마 조망 노천온천, 고급 호텔</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.google.com/maps?q=31.5949,130.5480" target="_blank" rel="noopener">📍 지도보기</a>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5949,130.5480" target="_blank" rel="noopener">🧭 네비게이션</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary: Food -->
+<div id="summary-food" class="summary-section">
+  <div class="container">
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍜 구로다마 (ぐろだま)</h4>
+      <span class="food-tag">지도리야끼</span>
+      <div class="info-row">📅 DAY2 저녁 | 📍 宮崎市橘通東3-3-11</div>
+      <div class="info-row">📞 0985-28-0505</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.9116,131.4249" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9116,131.4249" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍜 오구라 본점 (おぐら本店)</h4>
+      <span class="food-tag">치킨난반 원조</span>
+      <div class="info-row">📅 DAY3 저녁 | 📍 宮崎市橘通東3-4-24</div>
+      <div class="info-row">📞 0985-22-2296</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.9113,131.4260" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9113,131.4260" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍜 구로후쿠타 (黒福多)</h4>
+      <span class="food-tag">흑돼지 돈카츠</span>
+      <div class="info-row">📅 DAY4 저녁 | 📍 鹿児島市東千石町14-13</div>
+      <div class="info-row">📞 099-222-5625</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.5878,130.5561" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5878,130.5561" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍧 텐몬칸 무자키 (天文館むじゃき)</h4>
+      <span class="food-tag">시로쿠마 빙수 원조</span>
+      <div class="info-row">📅 DAY7 오후 | 📍 鹿児島市千日町5-8</div>
+      <div class="info-row">📞 099-222-6904</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.5873,130.5553" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5873,130.5553" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍜 가루후 라멘 (かるふ)</h4>
+      <span class="food-tag">가고시마 라멘</span>
+      <div class="info-row">📅 DAY5 저녁 | 📍 鹿児島市東千石町9-1</div>
+      <div class="info-row">📞 099-226-0741 | 약 900엔</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.5880,130.5558" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5880,130.5558" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+    <div class="summary-card" style="border-left-color: var(--accent);">
+      <h4>🍖 아지모리 (あぢもり)</h4>
+      <span class="food-tag">흑돼지 샤브샤브 원조</span>
+      <div class="info-row">📅 DAY7 저녁 | 📍 鹿児島市千日町13-21</div>
+      <div class="info-row">📞 099-224-7634</div>
+      <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.5872,130.5553" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5872,130.5553" target="_blank" rel="noopener">🧭 네비</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary: Route -->
+<div id="summary-route" class="summary-section">
+  <div class="container">
+    <div class="summary-card">
+      <h4>🗺️ 전체 여행 경로</h4>
+      <div class="info-row" style="margin-bottom:12px;">미야자키 공항 → 시가이아 리조트 → 니치난 해안 → 가고시마 → 이부스키 → 미야자키 공항</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.google.com/maps/dir/Miyazaki+Airport/31.9553,131.4697/31.8021,131.4697/31.6494,131.4667/31.5949,130.5480/31.2318,130.6340/Miyazaki+Airport" target="_blank" rel="noopener">🗺️ 구글지도에서 전체 경로 보기</a>
+      </div>
+      <iframe class="map-embed" style="height:300px" src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d800000!2d130.9!3d31.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x3538c8c0b5f4c5f7%3A0x4b8a5b2c3d4e5f6a!2sMiyazaki+Airport!3m2!1d31.8772!2d131.4492!4m5!1s0x353f2f8a8b9c0d1e%3A0x2f3a4b5c6d7e8f9a!2sKagoshima!3m2!1d31.5966!2d130.5571!5e0!3m2!1sko!2sjp!4v1" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Day Tabs -->
+<nav class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="showDay(1)"><span class="day-label">DAY 1</span><span class="day-date">5/24(일)</span></button>
+  <button class="tab-btn" onclick="showDay(2)"><span class="day-label">DAY 2</span><span class="day-date">5/25(월)</span></button>
+  <button class="tab-btn" onclick="showDay(3)"><span class="day-label">DAY 3</span><span class="day-date">5/26(화)</span></button>
+  <button class="tab-btn" onclick="showDay(4)"><span class="day-label">DAY 4</span><span class="day-date">5/27(수)</span></button>
+  <button class="tab-btn" onclick="showDay(5)"><span class="day-label">DAY 5</span><span class="day-date">5/28(목)</span></button>
+  <button class="tab-btn" onclick="showDay(6)"><span class="day-label">DAY 6</span><span class="day-date">5/29(금)</span></button>
+  <button class="tab-btn" onclick="showDay(7)"><span class="day-label">DAY 7</span><span class="day-date">5/30(토)</span></button>
+  <button class="tab-btn" onclick="showDay(8)"><span class="day-label">DAY 8</span><span class="day-date">5/31(일)</span></button>
+</nav>
+
+<main class="container">
+
+<!-- DAY 1 -->
+<div class="day-panel" id="day1">
+  <div class="day-header">
+    <h2>DAY 1 · 5월 24일(일)</h2>
+    <div class="day-summary">미야자키 도착 & 리조트 체크인</div>
+    <div class="day-stats"><span>🚗 약 20분</span><span>📍 2곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY1 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/Miyazaki+Airport/31.9553,131.4697/@31.92,131.46,12z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/Miyazaki+Airport/31.9553,131.4697/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">✈️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:10</div>
+            <div class="card-name">미야자키 공항 도착</div>
+            <div class="card-name-jp">宮崎空港</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-0912 宮崎県宮崎市大字赤江 <button class="copy-btn" onclick="copyText('〒880-0912 宮崎県宮崎市大字赤江',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-51-5111 <button class="copy-btn" onclick="copyText('0985-51-5111',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">宮崎空港 <button class="copy-btn" onclick="copyText('宮崎空港',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.8772,131.4492&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.8772,131.4492" target="_blank" rel="noopener">📍 지도보기</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚶 도보 5분 → 렌터카 영업소</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🚗</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:30</div>
+            <div class="card-name">렌터카 수령</div>
+            <div class="card-name-jp">空港内レンタカー営業所</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">위치</span>
+            <span class="info-value">공항 내 렌터카 카운터</span>
+            <span class="info-label">메모</span>
+            <span class="info-value">예약 확인서, 국제운전면허증, 여권 준비</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 20분 → 숙소</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🏨</span>
+          <div class="card-title-wrap">
+            <div class="card-time">19:20</div>
+            <div class="card-name">피닉스 시가이아 리조트 체크인</div>
+            <div class="card-name-jp">フェニックス・シーガイア・リゾート</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-8545 宮崎県宮崎市山崎町浜山 <button class="copy-btn" onclick="copyText('〒880-8545 宮崎県宮崎市山崎町浜山',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-21-1111 <button class="copy-btn" onclick="copyText('0985-21-1111',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">フェニックス・シーガイア・リゾート <button class="copy-btn" onclick="copyText('フェニックス・シーガイア・リゾート',this,event)">복사</button></span></span>
+            <span class="info-label">주차</span>
+            <span class="info-value">무료 (숙박객), 리조트 내 대형 주차장</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.9553,131.4697&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.9553,131.4697" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9553,131.4697" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            패밀리룸 예약 추천! 영유아 친화 시설 완비. 아기 침대, 베이비 배스 요청 가능.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">19:30</div>
+            <div class="card-name">저녁 식사</div>
+            <div class="card-name-jp">リゾート内レストラン</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">위치</span>
+            <span class="info-value">리조트 내 레스토랑 또는 편의점</span>
+            <span class="info-label">메모</span>
+            <span class="info-value">늦은 도착이므로 리조트 내에서 간단히 해결</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🌊</span>
+          <div class="card-title-wrap">
+            <div class="card-time">20:30</div>
+            <div class="card-name">리조트 해변 산책 & 휴식</div>
+            <div class="card-name-jp">シーガイアリゾート海辺</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">위치</span>
+            <span class="info-value">시가이아 리조트 해변</span>
+            <span class="info-label">메모</span>
+            <span class="info-value">긴 비행 후 가볍게 산책하며 일본의 밤공기 즐기기</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day-panel" id="day2">
+  <div class="day-header">
+    <h2>DAY 2 · 5월 25일(월)</h2>
+    <div class="day-summary">피닉스 자연동물원 & 미야자키 맛집</div>
+    <div class="day-stats"><span>🚗 약 50분</span><span>📍 4곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY2 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.9553,131.4697/31.9489,131.4553/31.9116,131.4249/31.9553,131.4697/@31.93,131.45,12z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.9553,131.4697/31.9489,131.4553/31.9116,131.4249/31.9553,131.4697/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍳</span>
+          <div class="card-title-wrap">
+            <div class="card-time">08:00</div>
+            <div class="card-name">리조트 조식</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">위치</span>
+            <span class="info-value">시가이아 리조트 내 레스토랑</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 5분 → 동물원</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🦒</span>
+          <div class="card-title-wrap">
+            <div class="card-time">09:30 ~ 15:00</div>
+            <div class="card-name">피닉스 자연동물원</div>
+            <div class="card-name-jp">宮崎市フェニックス自然動物園</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-0122 宮崎県宮崎市大字塩路字浜山3083-42 <button class="copy-btn" onclick="copyText('〒880-0122 宮崎県宮崎市大字塩路字浜山3083-42',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-39-1306 <button class="copy-btn" onclick="copyText('0985-39-1306',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">宮崎市フェニックス自然動物園 <button class="copy-btn" onclick="copyText('宮崎市フェニックス自然動物園',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">9:00~17:00 (입장 16:30까지)</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">어른 840엔, 유아 무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.9489,131.4553&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.9489,131.4553" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9489,131.4553" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            무료 대형 주차장 (약 400대) · 동물원 바로 앞
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            유모차 대여 가능(무료)! 플라밍고 쇼 시간 미리 확인. 동물 먹이주기 체험 300엔. 기린, 코끼리, 미니 놀이공원까지 하루 종일 놀 수 있어요!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 5분 → 리조트</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">😴</span>
+          <div class="card-title-wrap">
+            <div class="card-time">15:00 ~ 17:00</div>
+            <div class="card-name">리조트 복귀 & 준혁이 낮잠</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">활동</span>
+            <span class="info-value">낮잠 후 리조트 수영장 또는 해변 산책</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 20분 → 미야자키 시내</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:30</div>
+            <div class="card-name">구로다마 - 미야자키 지도리야끼</div>
+            <div class="card-name-jp">ぐろだま</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-0805 宮崎県宮崎市橘通東3丁目3-11 <button class="copy-btn" onclick="copyText('〒880-0805 宮崎県宮崎市橘通東3丁目3-11',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-28-0505 <button class="copy-btn" onclick="copyText('0985-28-0505',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">ぐろだま <button class="copy-btn" onclick="copyText('ぐろだま',this,event)">복사</button></span></span>
+            <span class="info-label">메뉴</span>
+            <span class="info-value">미야자키 지도리야끼 전문점 (지도리 숯불구이)</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.9116,131.4249&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.9116,131.4249" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9116,131.4249" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            전용 주차장 없음. 추천: 타이무즈 타치바나도리 주차장 (タイムズ橘通り) · 도보 3분
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day-panel" id="day3">
+  <div class="day-header">
+    <h2>DAY 3 · 5월 26일(화)</h2>
+    <div class="day-summary">니치난 해안 드라이브 (아오시마 → 우도신궁)</div>
+    <div class="day-stats"><span>🚗 약 2시간 25분</span><span>📍 5곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY3 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.9553,131.4697/31.8021,131.4697/31.6494,131.4667/31.9113,131.4260/31.9553,131.4697/@31.8,131.45,10z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.9553,131.4697/31.8021,131.4697/31.6494,131.4667/31.9113,131.4260/31.9553,131.4697/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍳</span>
+          <div class="card-title-wrap">
+            <div class="card-time">08:30</div>
+            <div class="card-name">조식 후 출발</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">출발지</span><span class="info-value">시가이아 리조트</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 25분 → 아오시마</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">⛩️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">09:30</div>
+            <div class="card-name">아오시마 신사 & 도깨비 빨래판</div>
+            <div class="card-name-jp">青島神社</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒889-2162 宮崎県宮崎市青島2丁目13-1 <button class="copy-btn" onclick="copyText('〒889-2162 宮崎県宮崎市青島2丁目13-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-65-1262 <button class="copy-btn" onclick="copyText('0985-65-1262',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">青島神社 <button class="copy-btn" onclick="copyText('青島神社',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">6:00~18:00 (계절별 변동)</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.8021,131.4697&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.8021,131.4697" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.8021,131.4697" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            무료: 아오시마 참도남광장 주차장 (青島参道南広場駐車場, ~40대, 8:30~17:00)<br>
+            유료: 아오시마 신사 참도구 주차장 (500엔/일, 24시간)
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            해변 산책로 평탄하여 유모차 이동 가능! 도깨비 빨래판 모양의 바위가 아이 흥미를 끌어요.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">11:30</div>
+            <div class="card-name">아오시마 해산물 점심</div>
+            <div class="card-name-jp">海幸</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒889-2162 宮崎県宮崎市青島2丁目 <button class="copy-btn" onclick="copyText('〒889-2162 宮崎県宮崎市青島2丁目',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-65-1778 <button class="copy-btn" onclick="copyText('0985-65-1778',this,event)">복사</button></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 40분 → 우도신궁</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">⛩️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">13:40</div>
+            <div class="card-name">우도 신궁</div>
+            <div class="card-name-jp">鵜戸神宮</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒887-0101 宮崎県日南市大字宮浦3232 <button class="copy-btn" onclick="copyText('〒887-0101 宮崎県日南市大字宮浦3232',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0987-29-1001 <button class="copy-btn" onclick="copyText('0987-29-1001',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">鵜戸神宮 <button class="copy-btn" onclick="copyText('鵜戸神宮',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">6:00~18:00</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">무료 (운다마 5개 100엔)</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.6494,131.4667&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.6494,131.4667" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.6494,131.4667" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            무료 · 제1주차장(본전까지 도보 1분), 제2주차장(도보 3~4분)
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            계단이 있어 유모차보다 아기띠 추천! 운다마 던지기는 준혁이도 재미있어할 거예요.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 60분 → 리조트</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">♨️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">17:00</div>
+            <div class="card-name">리조트 온천 이용</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">시가이아 리조트 내 온천</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 20분 → 미야자키 시내</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍗</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:30</div>
+            <div class="card-name">오구라 본점 - 치킨난반 원조</div>
+            <div class="card-name-jp">おぐら本店</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-0802 宮崎県宮崎市橘通東3丁目4-24 <button class="copy-btn" onclick="copyText('〒880-0802 宮崎県宮崎市橘通東3丁目4-24',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-22-2296 <button class="copy-btn" onclick="copyText('0985-22-2296',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">おぐら本店 <button class="copy-btn" onclick="copyText('おぐら本店',this,event)">복사</button></span></span>
+            <span class="info-label">메뉴</span>
+            <span class="info-value">치킨난반의 원조! 타르타르소스 치킨</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.9113,131.4260&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.9113,131.4260" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.9113,131.4260" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            전용 주차장 없음. 추천: 미야자키 시영 중앙주차장 (宮崎市営中央駐車場) · 도보 5분
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 4 -->
+<div class="day-panel" id="day4">
+  <div class="day-header">
+    <h2>DAY 4 · 5월 27일(수)</h2>
+    <div class="day-summary">니치난 해양체험 & 가고시마 이동</div>
+    <div class="day-stats"><span>🚗 약 3시간 30분</span><span>📍 5곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY4 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.9553,131.4697/31.5791,131.3910/31.5949,130.5480/31.5878,130.5561/@31.7,131.0,8z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.9553,131.4697/31.5791,131.3910/31.5949,130.5480/31.5878,130.5561/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🧳</span>
+          <div class="card-title-wrap">
+            <div class="card-time">08:00</div>
+            <div class="card-name">조식 후 체크아웃</div>
+            <div class="card-name-jp">チェックアウト</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">시가이아 리조트 (3박 완료)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 70분 → 니치난</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🚢</span>
+          <div class="card-title-wrap">
+            <div class="card-time">09:30</div>
+            <div class="card-name">마린 뷰어 난고 - 해양 체험</div>
+            <div class="card-name-jp">マリンビューワーなんごう</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒889-3213 宮崎県日南市南郷町潟上134-54 <button class="copy-btn" onclick="copyText('〒889-3213 宮崎県日南市南郷町潟上134-54',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0987-64-4288 <button class="copy-btn" onclick="copyText('0987-64-4288',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">マリンビューワーなんごう <button class="copy-btn" onclick="copyText('マリンビューワーなんごう',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">9:30~16:00 (출항 시간 확인 필요)</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">어른 1,500엔 / 소아(4세~) 750엔 / 3세 이하 무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5791,131.3910&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5791,131.3910" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5791,131.3910" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            무료 (토가우라항 주차장)
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            반잠수식 함선으로 배 밑창 유리로 물고기 관찰! 31개월 준혁이에게 안전하고 재미있는 체험!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 2시간 → 가고시마</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🏨</span>
+          <div class="card-title-wrap">
+            <div class="card-time">15:00</div>
+            <div class="card-name">시로야마 호텔 가고시마 체크인</div>
+            <div class="card-name-jp">SHIROYAMA HOTEL kagoshima</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒890-8586 鹿児島県鹿児島市新照院町41-1 <button class="copy-btn" onclick="copyText('〒890-8586 鹿児島県鹿児島市新照院町41-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-224-2211 <button class="copy-btn" onclick="copyText('099-224-2211',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">SHIROYAMA HOTEL kagoshima <button class="copy-btn" onclick="copyText('SHIROYAMA HOTEL kagoshima',this,event)">복사</button></span></span>
+            <span class="info-label">주차</span>
+            <span class="info-value">호텔 전용 무료 주차장 (숙박객)</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5949,130.5480&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5949,130.5480" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5949,130.5480" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">✨ HOTEL TIP</div>
+            사쿠라지마 조망 노천온천이 유명! 3박 연박 (5/27~5/30)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 10분 → 텐몬칸</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🛍️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">16:00</div>
+            <div class="card-name">텐몬칸 거리 산책 & 쇼핑</div>
+            <div class="card-name-jp">天文館通り</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0842 鹿児島県鹿児島市東千石町 <button class="copy-btn" onclick="copyText('〒892-0842 鹿児島県鹿児島市東千石町',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">天文館通り <button class="copy-btn" onclick="copyText('天文館通り',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5878,130.5561&output=embed" loading="lazy"></iframe>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            텐몬칸 공원 지하주차장 (天文館公園地下駐車場)<br>
+            〒892-0843 鹿児島県鹿児島市千日町1 · 30분 150엔
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍖</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:00</div>
+            <div class="card-name">구로후쿠타 - 흑돼지 돈카츠</div>
+            <div class="card-name-jp">黒福多</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0842 鹿児島県鹿児島市東千石町14-13 <button class="copy-btn" onclick="copyText('〒892-0842 鹿児島県鹿児島市東千石町14-13',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-222-5625 <button class="copy-btn" onclick="copyText('099-222-5625',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">黒福多 <button class="copy-btn" onclick="copyText('黒福多',this,event)">복사</button></span></span>
+            <span class="info-label">위치</span>
+            <span class="info-value">텐몬칸 내 도보 3분</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5878,130.5561&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5878,130.5561" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5878,130.5561" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍧</span>
+          <div class="card-title-wrap">
+            <div class="card-time">19:00</div>
+            <div class="card-name">텐몬칸 무자키 - 시로쿠마 빙수!</div>
+            <div class="card-name-jp">天文館むじゃき</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0843 鹿児島県鹿児島市千日町5-8 <button class="copy-btn" onclick="copyText('〒892-0843 鹿児島県鹿児島市千日町5-8',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-222-6904 <button class="copy-btn" onclick="copyText('099-222-6904',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5873,130.5553&output=embed" loading="lazy"></iframe>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            가고시마 명물 시로쿠마(백곰) 빙수 원조! 준혁이가 좋아하는 빙수!
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 5 -->
+<div class="day-panel" id="day5">
+  <div class="day-header">
+    <h2>DAY 5 · 5월 28일(목)</h2>
+    <div class="day-summary">사쿠라지마 화산 탐방</div>
+    <div class="day-stats"><span>⛴ 페리 왕복 + 🚗 약 50분</span><span>📍 6곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY5 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.5949,130.5480/31.5915,130.5647/31.5867,130.5945/31.5835,130.5985/31.5880,130.5558/31.5949,130.5480/@31.59,130.57,13z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.5949,130.5480/31.5915,130.5647/31.5867,130.5945/31.5835,130.5985/31.5880,130.5558/31.5949,130.5480/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍳</span>
+          <div class="card-title-wrap"><div class="card-time">08:30</div><div class="card-name">조식 후 출발</div></div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body"><div class="info-grid"><span class="info-label">출발</span><span class="info-value">시로야마 호텔</span></div></div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 15분 → 페리터미널</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">⛴</span>
+          <div class="card-title-wrap">
+            <div class="card-time">09:15</div>
+            <div class="card-name">사쿠라지마 페리</div>
+            <div class="card-name-jp">鹿児島港フェリーターミナル</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0814 鹿児島県鹿児島市本港新町4-1 <button class="copy-btn" onclick="copyText('〒892-0814 鹿児島県鹿児島市本港新町4-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-293-2525 <button class="copy-btn" onclick="copyText('099-293-2525',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">鹿児島港フェリーターミナル <button class="copy-btn" onclick="copyText('鹿児島港フェリーターミナル',this,event)">복사</button></span></span>
+            <span class="info-label">요금</span>
+            <span class="info-value">차량+승객 포함 소형차 약 1,600엔 편도</span>
+            <span class="info-label">운항</span>
+            <span class="info-value">15분 간격 24시간 운항, 소요 약 15분</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5915,130.5647&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5915,130.5647" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5915,130.5647" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box">
+            <div class="parking-title">🅿️ 주차 정보</div>
+            현영 유료주차장 (1시간 무료, 이후 1시간당 200엔) — 차는 페리에 싣고 갑니다!
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">🍜 페리 TIP</div>
+            사쿠라지마 페리 우동이 유명! 15분 안에 먹어야 하는 스릴!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>⛴ 페리 15분 → 사쿠라지마</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🌋</span>
+          <div class="card-title-wrap">
+            <div class="card-time">10:00</div>
+            <div class="card-name">사쿠라지마 비지터 센터</div>
+            <div class="card-name-jp">桜島ビジターセンター</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒891-1419 鹿児島市桜島横山町1722-29 <button class="copy-btn" onclick="copyText('〒891-1419 鹿児島市桜島横山町1722-29',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-293-2443 <button class="copy-btn" onclick="copyText('099-293-2443',this,event)">복사</button></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🦕</span>
+          <div class="card-title-wrap">
+            <div class="card-time">10:30 & 14:00</div>
+            <div class="card-name">사쿠라지마 자연 공룡 공원</div>
+            <div class="card-name-jp">桜島自然恐竜公園</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒891-1419 鹿児島市桜島横山町79 <button class="copy-btn" onclick="copyText('〒891-1419 鹿児島市桜島横山町79',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">桜島自然恐竜公園 <button class="copy-btn" onclick="copyText('桜島自然恐竜公園',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">24시간 개방 · 무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5867,130.5945&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5867,130.5945" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5867,130.5945" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>무료 (약 20대)</div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            실물 크기 공룡 모형 7기 + 미니 슬라이드 & 터널! 31개월 아이에게 최고의 놀이터!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">♨️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">11:30</div>
+            <div class="card-name">용암 나기사 공원 족욕탕</div>
+            <div class="card-name-jp">溶岩なぎさ公園足湯</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒891-1419 鹿児島市桜島横山町1722-3 <button class="copy-btn" onclick="copyText('〒891-1419 鹿児島市桜島横山町1722-3',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-298-5111 <button class="copy-btn" onclick="copyText('099-298-5111',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">9:00~일몰 · 무료!</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5835,130.5985&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5835,130.5985" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5835,130.5985" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            일본 최대 규모(전장 약 100m) 야외 족욕탕! 준혁이도 발 담글 수 있어요. 타월 챙기기!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>⛴ 페리 15분 → 가고시마</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:00</div>
+            <div class="card-name">가루후 라멘</div>
+            <div class="card-name-jp">かるふ</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0842 鹿児島県鹿児島市東千石町9-1 <button class="copy-btn" onclick="copyText('〒892-0842 鹿児島県鹿児島市東千石町9-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-226-0741 <button class="copy-btn" onclick="copyText('099-226-0741',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">かるふ <button class="copy-btn" onclick="copyText('かるふ',this,event)">복사</button></span></span>
+            <span class="info-label">가격</span>
+            <span class="info-value">약 900엔 · 돼지뼈+닭뼈 마일드 국물</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5880,130.5558&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5880,130.5558" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5880,130.5558" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>텐몬칸 공원 지하주차장 이용 (도보 3분)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 6 -->
+<div class="day-panel" id="day6">
+  <div class="day-header">
+    <h2>DAY 6 · 5월 29일(금)</h2>
+    <div class="day-summary">이부스키 모래찜질 & 가고시마 수족관</div>
+    <div class="day-stats"><span>🚗 약 3시간 30분</span><span>📍 4곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY6 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.5949,130.5480/31.2318,130.6340/31.5930,130.5655/31.5949,130.5480/@31.4,130.6,10z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.5949,130.5480/31.2318,130.6340/31.5930,130.5655/31.5949,130.5480/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 1시간 30분 → 이부스키</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🏖️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">10:00</div>
+            <div class="card-name">사라쿠 - 모래찜질 온천</div>
+            <div class="card-name-jp">砂むし会館砂楽</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒891-0406 鹿児島県指宿市湯の浜5丁目25-18 <button class="copy-btn" onclick="copyText('〒891-0406 鹿児島県指宿市湯の浜5丁目25-18',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0993-23-3900 <button class="copy-btn" onclick="copyText('0993-23-3900',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">砂むし会館砂楽 <button class="copy-btn" onclick="copyText('砂むし会館砂楽',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">8:30~12:00, 13:00~20:30 (토일 8:30~20:30)</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">어른 1,200엔 (유카타 포함)</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.2318,130.6340&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.2318,130.6340" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.2318,130.6340" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>무료 (약 100대)</div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            31개월에게는 모래가 뜨거울 수 있으니 부모님 교대 체험 추천! 10~15분이면 충분. 타월 가져가기!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 1시간 30분 → 가고시마</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">😴</span>
+          <div class="card-title-wrap">
+            <div class="card-time">15:30</div>
+            <div class="card-name">호텔 휴식 & 준혁이 낮잠</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body"><div class="info-grid"><span class="info-label">위치</span><span class="info-value">시로야마 호텔</span></div></div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 15분 → 수족관</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🐠</span>
+          <div class="card-title-wrap">
+            <div class="card-time">17:00</div>
+            <div class="card-name">이오월드 가고시마 수족관</div>
+            <div class="card-name-jp">いおワールドかごしま水族館</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0814 鹿児島県鹿児島市本港新町3-1 <button class="copy-btn" onclick="copyText('〒892-0814 鹿児島県鹿児島市本港新町3-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-226-2233 <button class="copy-btn" onclick="copyText('099-226-2233',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">いおワールドかごしま水族館 <button class="copy-btn" onclick="copyText('いおワールドかごしま水族館',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">9:30~18:00 (입장 17:00까지)</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">어른 1,500엔 / 소아(4세~) 750엔 / 3세 이하 무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5930,130.5655&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5930,130.5655" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5930,130.5655" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>현영 유료주차장 (1시간 무료, 이후 200엔/시간)</div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            고래상어 수조, 돌고래 쇼, 체험형 전시! 아이에게 최고! 사쿠라지마 페리터미널 바로 옆.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:30</div>
+            <div class="card-name">돌핀포트 주변 저녁</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">돌핀포트 워터웨이 주변 식당 (수족관에서 도보 3분)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 7 -->
+<div class="day-panel" id="day7">
+  <div class="day-header">
+    <h2>DAY 7 · 5월 30일(토)</h2>
+    <div class="day-summary">센간엔 & 가고시마 시내 마지막 날</div>
+    <div class="day-stats"><span>🚗 약 1시간</span><span>📍 6곳</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY7 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.5949,130.5480/31.6160,130.5736/31.5843,130.5430/31.5873,130.5553/31.5872,130.5553/31.5949,130.5480/@31.60,130.55,13z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.5949,130.5480/31.6160,130.5736/31.5843,130.5430/31.5873,130.5553/31.5872,130.5553/31.5949,130.5480/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 15분 → 센간엔</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🏛️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">09:30</div>
+            <div class="card-name">센간엔</div>
+            <div class="card-name-jp">仙巌園</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0871 鹿児島県鹿児島市吉野町9700-1 <button class="copy-btn" onclick="copyText('〒892-0871 鹿児島県鹿児島市吉野町9700-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-247-1551 <button class="copy-btn" onclick="copyText('099-247-1551',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">仙巌園 <button class="copy-btn" onclick="copyText('仙巌園',this,event)">복사</button></span></span>
+            <span class="info-label">영업</span>
+            <span class="info-value">9:00~17:00</span>
+            <span class="info-label">요금</span>
+            <span class="info-value">어른 1,000엔 (정원+상관) / 소아 500엔 / 미취학 무료</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.6160,130.5736&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.6160,130.5736" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.6160,130.5736" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>유료 (300엔/회)</div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            넓은 평지라 유모차로 산책 가능! 묘묘(고양이) 관찰 코너 - 아이가 좋아합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 20분 → 중앙역</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🛍️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">13:00</div>
+            <div class="card-name">아뮤플라자 가고시마 쇼핑</div>
+            <div class="card-name-jp">アミュプラザ鹿児島</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒890-0053 鹿児島県鹿児島市中央町1-1 <button class="copy-btn" onclick="copyText('〒890-0053 鹿児島県鹿児島市中央町1-1',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-812-7700 <button class="copy-btn" onclick="copyText('099-812-7700',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5843,130.5430&output=embed" loading="lazy"></iframe>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>유료 (30분 200엔, 쇼핑 시 할인) · 아이용품 쇼핑 가능</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 5분 → 텐몬칸</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍧</span>
+          <div class="card-title-wrap">
+            <div class="card-time">15:30</div>
+            <div class="card-name">텐몬칸 무자키 - 시로쿠마 빙수!</div>
+            <div class="card-name-jp">天文館むじゃき</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0843 鹿児島県鹿児島市千日町5-8 <button class="copy-btn" onclick="copyText('〒892-0843 鹿児島県鹿児島市千日町5-8',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-222-6904 <button class="copy-btn" onclick="copyText('099-222-6904',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">天文館むじゃき <button class="copy-btn" onclick="copyText('天文館むじゃき',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5873,130.5553&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5873,130.5553" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5873,130.5553" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">👶 준혁이 TIP</div>
+            시로쿠마(백곰) 빙수 원조! 준혁이가 좋아하는 빙수 한번 더!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 10분 → 호텔 → 저녁</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍖</span>
+          <div class="card-title-wrap">
+            <div class="card-time">18:30</div>
+            <div class="card-name">아지모리 - 흑돼지 샤브샤브 원조</div>
+            <div class="card-name-jp">あぢもり</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒892-0843 鹿児島県鹿児島市千日町13-21 <button class="copy-btn" onclick="copyText('〒892-0843 鹿児島県鹿児島市千日町13-21',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">099-224-7634 <button class="copy-btn" onclick="copyText('099-224-7634',this,event)">복사</button></span></span>
+            <span class="info-label">내비</span>
+            <span class="info-value"><span class="copy-wrap">あぢもり <button class="copy-btn" onclick="copyText('あぢもり',this,event)">복사</button></span></span>
+            <span class="info-label">메뉴</span>
+            <span class="info-value">가고시마 흑돼지 샤브샤브 원조! 특제 육수 + 달걀 찍어먹기</span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.5872,130.5553&output=embed" loading="lazy"></iframe>
+          <div class="map-links">
+            <a class="map-link" href="https://www.google.com/maps?q=31.5872,130.5553" target="_blank" rel="noopener">📍 지도보기</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5872,130.5553" target="_blank" rel="noopener">🧭 네비게이션</a>
+          </div>
+          <div class="parking-box"><div class="parking-title">🅿️ 주차 정보</div>전용 주차장 없음. 텐몬칸 공원 지하주차장 이용 (도보 2분)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DAY 8 -->
+<div class="day-panel" id="day8">
+  <div class="day-header">
+    <h2>DAY 8 · 5월 31일(일)</h2>
+    <div class="day-summary">미야자키 복귀 & 출국</div>
+    <div class="day-stats"><span>🚗 약 3시간</span><span>✈️ 19:10 출발</span></div>
+  </div>
+  <div class="day-route-map">
+    <div class="route-title">🗺️ DAY8 이동동선</div>
+    <iframe src="https://www.google.com/maps/dir/31.5949,130.5480/Miyazaki+Airport/@31.7,131.0,8z/?output=embed" loading="lazy"></iframe>
+    <a class="route-link" href="https://www.google.com/maps/dir/31.5949,130.5480/Miyazaki+Airport/" target="_blank" rel="noopener">↗ 구글지도에서 경로 보기</a>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🧳</span>
+          <div class="card-title-wrap">
+            <div class="card-time">08:00</div>
+            <div class="card-name">조식 후 체크아웃</div>
+            <div class="card-name-jp">チェックアウト</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">시로야마 호텔 가고시마 (3박 완료)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-indicator"><div class="timeline-dot"></div>🚗 차량 약 2시간 30분~3시간 → 미야자키</div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🍜</span>
+          <div class="card-title-wrap">
+            <div class="card-time">12:00</div>
+            <div class="card-name">미야자키 시내 점심</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">미야자키 시내 식당 (마지막 미야자키 맛집!)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🛍️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">14:00</div>
+            <div class="card-name">미야자키 공항 기념품 쇼핑</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid"><span class="info-label">위치</span><span class="info-value">미야자키 공항 위층 항공 플라자</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">🚗</span>
+          <div class="card-title-wrap">
+            <div class="card-time">16:00</div>
+            <div class="card-name">렌터카 반납</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">위치</span><span class="info-value">미야자키 공항 인근 렌터카 영업소</span>
+            <span class="info-label">메모</span><span class="info-value">연료 가득 채워서 반납! 공항 가까운 주유소에서 충전</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">✈️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">17:00</div>
+            <div class="card-name">공항 체크인 & 면세점</div>
+            <div class="card-name-jp">宮崎空港</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">주소</span>
+            <span class="info-value"><span class="copy-wrap">〒880-0912 宮崎県宮崎市大字赤江 <button class="copy-btn" onclick="copyText('〒880-0912 宮崎県宮崎市大字赤江',this,event)">복사</button></span></span>
+            <span class="info-label">전화</span>
+            <span class="info-value"><span class="copy-wrap">0985-51-5111 <button class="copy-btn" onclick="copyText('0985-51-5111',this,event)">복사</button></span></span>
+          </div>
+          <iframe class="map-embed" src="https://www.google.com/maps?q=31.8772,131.4492&output=embed" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="place-card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <span class="card-icon">✈️</span>
+          <div class="card-title-wrap">
+            <div class="card-time">19:10</div>
+            <div class="card-name">아시아나항공 출발</div>
+            <div class="card-name-jp">宮崎 → 仁川 (20:50着)</div>
+          </div>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <span class="info-label">항공편</span><span class="info-value">아시아나항공 미야자키 → 인천</span>
+            <span class="info-label">도착</span><span class="info-value">20:50 인천국제공항</span>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">✨ 여행 완료!</div>
+            수고하셨습니다! 7박 8일 미야자키 & 가고시마 가족여행 끝! 🎉
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Scroll to top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<footer style="text-align:center;padding:32px 16px;color:var(--text-light);font-size:0.8rem;">
+  미야자키 & 가고시마 7박 8일 가족여행 | 2025.05.24 ~ 05.31<br>
+  태호 · 와이프 · 준혁이(31개월) 💕
+</footer>
+
+<script>
+let isScrolling = false;
+
+// Tab switching — scroll to day
+function showDay(n) {
+  isScrolling = true;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn')[n - 1].classList.add('active');
+  // Scroll tab button into view
+  document.querySelectorAll('.tab-btn')[n - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  // Show itinerary if hidden
+  showSummary('itinerary');
+  // Scroll to the day panel
+  const panel = document.getElementById('day' + n);
+  const tabBar = document.getElementById('tabBar');
+  const offset = tabBar.offsetHeight + 8;
+  const top = panel.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: top, behavior: 'smooth' });
+  setTimeout(() => { isScrolling = false; }, 800);
+}
+
+// Summary tabs
+function showSummary(type) {
+  document.querySelectorAll('.summary-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.summary-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('summary-' + type).classList.add('active');
+  const btns = document.querySelectorAll('.summary-tab-btn');
+  const types = ['itinerary', 'hotels', 'food', 'route'];
+  const idx = types.indexOf(type);
+  if (idx >= 0) btns[idx].classList.add('active');
+  // Show/hide day panels based on summary type
+  const tabBar = document.getElementById('tabBar');
+  const main = document.querySelector('main.container');
+  if (type === 'itinerary') {
+    tabBar.style.display = 'flex';
+    main.style.display = 'block';
+  } else {
+    tabBar.style.display = 'none';
+    main.style.display = 'none';
+  }
+}
+
+// Highlight active tab on scroll (IntersectionObserver)
+function setupScrollSpy() {
+  const panels = document.querySelectorAll('.day-panel');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const observer = new IntersectionObserver((entries) => {
+    if (isScrolling) return;
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        const dayNum = parseInt(id.replace('day', ''));
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabBtns[dayNum - 1].classList.add('active');
+        tabBtns[dayNum - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+  panels.forEach(p => observer.observe(p));
+}
+
+// Card toggle
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.card-toggle');
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+// Copy to clipboard
+function copyText(text, btn, event) {
+  event.stopPropagation();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '완료!';
+    btn.classList.add('copied');
+    showToast('복사되었습니다: ' + text);
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '완료!'; btn.classList.add('copied');
+    showToast('복사되었습니다!');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Theme toggle
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.querySelector('.theme-toggle');
+  if (body.getAttribute('data-theme') === 'dark') {
+    body.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    body.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Load saved theme
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.setAttribute('data-theme', 'dark');
+  document.querySelector('.theme-toggle').textContent = '☀️';
+}
+
+// Scroll to top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  showSummary('itinerary');
+  setupScrollSpy();
+  // Set first tab active
+  document.querySelectorAll('.tab-btn')[0].classList.add('active');
+});
+</script>
+
+</body>
+</html>
