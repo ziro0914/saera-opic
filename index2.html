@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPIc Script Viewer (Natural)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --bg-light: #ffffff;
+            --bg-dark: #1f2937;
+            --text-light: #111827;
+            --text-dark: #f3f4f6;
+            --border-light: #e5e7eb;
+            --border-dark: #374151;
+            --highlight-color: #fef08a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s, color 0.3s;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .global-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-primary.active {
+            background-color: rgba(255, 255, 255, 0.4);
+            border-color: white;
+        }
+
+        .speed-control {
+            display: flex;
+            gap: 0.3rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem;
+            border-radius: 0.5rem;
+        }
+
+        .speed-btn {
+            padding: 0.5rem 0.8rem;
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .speed-btn.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .speed-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-light);
+            border-right: 1px solid var(--border-light);
+            overflow-y: auto;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .sidebar {
+            background-color: #111827;
+            border-right-color: var(--border-dark);
+        }
+
+        .topic-tab {
+            padding: 1.2rem;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        body.dark-mode .topic-tab {
+            border-bottom-color: var(--border-dark);
+        }
+
+        .topic-tab:hover {
+            background-color: #f3f4f6;
+        }
+
+        body.dark-mode .topic-tab:hover {
+            background-color: #1f2937;
+        }
+
+        .topic-tab.active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+            border-left-color: var(--primary-color);
+        }
+
+        body.dark-mode .topic-tab.active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, transparent 100%);
+        }
+
+        .topic-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .topic-name {
+            color: var(--text-dark);
+        }
+
+        .topic-subtitle {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        body.dark-mode .topic-subtitle {
+            color: #9ca3af;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background-color: var(--bg-light);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .content {
+            background-color: #111827;
+        }
+
+        .question-block {
+            margin-bottom: 2.5rem;
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.8rem;
+            border-left: 4px solid var(--primary-color);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .question-block {
+            background-color: #1f2937;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.3rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-roleplay {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        body.dark-mode .badge-roleplay {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        .badge-sudden {
+            background-color: #fed7aa;
+            color: #92400e;
+        }
+
+        body.dark-mode .badge-sudden {
+            background-color: #78350f;
+            color: #fdba74;
+        }
+
+        .badge-experience {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        body.dark-mode .badge-experience {
+            background-color: #064e3b;
+            color: #86efac;
+        }
+
+        .badge-general {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        body.dark-mode .badge-general {
+            background-color: #4b5563;
+            color: #d1d5db;
+        }
+
+        .question {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .question {
+            color: var(--text-dark);
+        }
+
+        .answer-container {
+            background-color: var(--bg-light);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .answer-container {
+            background-color: #374151;
+        }
+
+        .answer-text {
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        body.dark-mode .answer-text {
+            color: #d1d5db;
+        }
+
+        .answer-text .highlighted {
+            background-color: var(--highlight-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.2rem;
+            font-weight: 600;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-play {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-play:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-play:active {
+            transform: translateY(0);
+        }
+
+        .playback-info {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        body.dark-mode .playback-info {
+            color: #9ca3af;
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                overflow-x: auto;
+            }
+
+            body.dark-mode .sidebar {
+                border-bottom-color: var(--border-dark);
+            }
+
+            .topic-tab {
+                flex-shrink: 0;
+                border-left: none;
+                border-bottom: 4px solid transparent;
+                width: auto;
+                min-width: 200px;
+            }
+
+            .topic-tab.active {
+                border-left: none;
+                border-bottom-color: var(--primary-color);
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .global-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .question-block {
+                padding: 1rem;
+                border-left-width: 3px;
+            }
+
+            .question {
+                font-size: 1rem;
+            }
+
+            .answer-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 OPIc Script Viewer (Natural Tone)</h1>
+            <div class="global-controls">
+                <button class="btn btn-primary" id="playAllBtn">
+                    <span>▶</span> Play All
+                </button>
+                <button class="btn btn-primary" id="stopAllBtn">
+                    <span>⏹</span> Stop
+                </button>
+                <div class="speed-control" id="speedControl">
+                    <button class="speed-btn" data-speed="0.7">0.7x</button>
+                    <button class="speed-btn" data-speed="0.8">0.8x</button>
+                    <button class="speed-btn active" data-speed="0.9">0.9x</button>
+                    <button class="speed-btn" data-speed="1.0">1.0x</button>
+                    <button class="speed-btn" data-speed="1.1">1.1x</button>
+                    <button class="speed-btn" data-speed="1.2">1.2x</button>
+                </div>
+                <select id="voiceSelector" style="padding:0.5rem;border-radius:0.4rem;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:white;font-size:0.85rem;max-width:200px;cursor:pointer;" title="Select Voice">
+                    <option>Loading voices...</option>
+                </select>
+                <button class="btn theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar" id="sidebar"></div>
+            <div class="content" id="content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data structure
+        const topics = [
+            {
+                id: 1,
+                korean: "건강",
+                english: "Health",
+                qa: [
+                    {
+                        type: "general",
+                        q: "Let's talk about a healthy person you know.",
+                        a: "So, I have this close friend who's honestly one of the healthiest people I know. She's in her early 40s, and she just looks really fit and energetic all the time. She's not super skinny or anything, but her body is really well-balanced. And her skin? It's so clear and bright — it just makes her look even healthier. I think the reason she's like that is she's got really solid habits. She works out regularly, like three to four times a week at the gym, doing both cardio and weight training. Plus, she eats really well. She's big on home-cooked meals instead of fast food, and she always makes sure she's getting enough vegetables, fruits, and protein. Oh and she's also really good at managing stress. Like, when she's feeling overwhelmed, she'll just go for a walk or put on some music. So yeah, with all those habits, she's always full of energy. I honestly admire that about her."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about how your parent's generation used to maintain their health. How is it different from your generation?",
+                        a: "Honestly, my parents' generation had a totally different approach to health. They didn't really go to the gym or follow some specific workout plan. They just stayed active naturally, you know? Like, they walked everywhere, did a lot of physical work, spent more time outside. And their diet was way different too. They mostly ate home-cooked meals because processed food and fast food just weren't really a thing back then. So their meals were naturally healthier. But for my generation, it's kind of the opposite. A lot of us have desk jobs, so we're sitting all day. That's why we have to exercise on purpose — like going to the gym or doing home workouts. And the food situation is tough too, I mean, we've got fast food and delivery apps everywhere, so it's so easy to eat unhealthy. But at the same time, people are actually more aware of health now. Like, they're into dieting, supplements, specific fitness programs and all that. So basically, my parents' generation stayed healthy without even trying that hard, just through their daily routine. But we really have to make a conscious effort, which is kind of ironic."
+                    },
+                    {
+                        type: "general",
+                        q: "What are some things you have tried personally to stay healthy?",
+                        a: "Well, I've actually tried a few things to stay healthy. The biggest one is working out regularly. I go to the gym about two to three times a week — mostly cardio like running on the treadmill, and sometimes I'll throw in some light weight training. Honestly, it was pretty hard to stick with at first, but now it's just a habit. I also started cleaning up my eating. I used to eat a ton of fast food and instant meals, but I realized, you know, that stuff's really not good for me. So now I try to cook at home more and make sure I'm getting vegetables, fruits, and protein. Oh and another thing — sleep. I used to stay up way too late just scrolling on my phone, but now I actually try to go to bed at a decent hour and keep a regular schedule. And honestly, since I started doing all this, I feel way more energetic than before. It's made a real difference."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                korean: "영화",
+                english: "Movies",
+                qa: [
+                    {
+                        type: "roleplay",
+                        q: "[롤플레이] Contact the movie theater and ask three to four questions about getting movie tickets.",
+                        a: "Hey, hi! I'm looking to book some movie tickets for tomorrow and I had a few questions. So first off, what's playing right now? Anything you'd recommend? Oh, that sounds pretty good, actually. And do you still have seats open for the 7PM showing? I need two tickets — somewhere in the middle rows if possible. Nice, perfect. Oh and one more thing — I've got a discount coupon, can I use that for these tickets? Awesome, glad to hear that. Oh, by the way, do you guys have parking there? All right, great. That's everything I needed. Thanks a lot!"
+                    },
+                    {
+                        type: "sudden",
+                        q: "[돌발] You purchased two movie tickets but there is something wrong. Explain the situation to the staff.",
+                        a: "Hey, excuse me. So I just realized I messed up with my tickets. I was trying to book the 7PM showing, but I accidentally got tickets for the 9PM one instead. I must've clicked the wrong time slot and didn't even notice until just now. I'm really sorry about that. Is there any way I could switch them to the 7PM show? Or honestly, if it's easier, I'm totally fine with getting a refund and just buying new ones. I don't mind paying a small fee or whatever — I just really wanna get this sorted out before the movie starts. What are my options here? Oh, that's great to hear. Thanks so much, I really appreciate it."
+                    },
+                    {
+                        type: "experience",
+                        q: "[경험] Have you ever had a similar experience? (Wrong tickets for a soccer game)",
+                        a: "Oh man, yes, actually something really similar happened to me with a soccer game. So this was last year, I think around September. My friends and I were super excited because we'd gotten tickets to this big rivalry match — our local team against their biggest rivals. So we met up, grabbed some food on the way, got to the stadium early, the whole thing. But then when we tried to scan our tickets at the gate, it just wouldn't go through. I pulled up my email and — I couldn't believe it — I'd bought tickets for the wrong game. Like, I'd selected a match that was happening the following week, not that day. My friends were, you know, pretty annoyed, understandably. But we went to the customer service desk and the person there was actually really helpful. They managed to switch our tickets to the right game, though we had to pay a little extra fee. We ended up getting inside just before kickoff, which was a huge relief. It was stressful in the moment, but honestly we laughed about it afterwards. And the match was totally worth it — our team won! So yeah, ever since then, I triple-check every single detail before I buy tickets. Lesson learned."
+                    },
+                    {
+                        type: "general",
+                        q: "Compare movies made today to movies you saw while growing up.",
+                        a: "So I'd say movies have changed quite a bit from when I was growing up. Back then, movies were, you know, simpler in a way — they relied a lot more on the story itself. The special effects weren't nearly as advanced, so it was really about the plot and the characters pulling you in. Now though, movies are just visually insane. Like, with CGI and all that technology, especially in action or fantasy films, the visuals are on a whole other level. It's honestly pretty impressive. And the other big thing is how we watch them. I used to only see movies in theaters or catch them on TV. But now, I mean, everyone's just streaming stuff at home, which is way more convenient. But here's the thing — even with all these changes, I think the core of it is still the same. Movies are still about telling good stories and giving people a good time. And people still love watching them together with friends or family. That part hasn't really changed at all."
+                    },
+                    {
+                        type: "general",
+                        q: "When you talk about movies with your friends, what topics do you discuss?",
+                        a: "So my friend Jenny and I are both really into movies, so we end up talking about them all the time. And it's funny because what we talk about is totally different depending on whether it's before or after we watch something. Like, before watching, we're mostly checking what's popular, looking at reviews, that kind of stuff. I'm the type who thinks if a movie's popular, it's probably good for a reason. And honestly, if the reviews are bad, I'll skip it — I don't wanna waste my time or money on something that's not worth it. But after we watch a movie, that's when it gets really fun. We always start with the best scenes — like some crazy action sequence or a really emotional moment. Then we get into how the actors did, whether the story held up. And especially if there's a plot twist, we'll be like, 'Did you see that coming?' and go back and forth about it. Those conversations are honestly the best part sometimes. It makes you appreciate the movie way more when you actually talk it through with someone."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                korean: "집에서 보내는 휴가",
+                english: "Home Vacation",
+                qa: [
+                    {
+                        type: "general",
+                        q: "How do most people spend their vacation at home? How does that compare to the past?",
+                        a: "So, home vacations have changed a lot, honestly. Back in the day, people kept it really simple. They'd just watch TV, read books, or hang out with family. I mean, there weren't that many options for entertainment, so it was all pretty quiet and chill. But now? Totally different story. People have so many more things to do even without leaving the house. Like, they binge-watch shows on Netflix, play video games, scroll through social media for hours. And the thing is, people actually try to make their time at home feel special now. Some people get into cooking new recipes, do home workouts, or set up their place like a little staycation — you know, candles, good food, the whole vibe. I think technology is the biggest reason for that shift. With smartphones and the internet, you can basically do anything from your couch. Plus, people these days really value their personal time and self-care way more than before. So yeah, home vacations used to be super low-key, but now people actually put effort into making them fun and meaningful."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about the importance and benefits of going on a vacation.",
+                        a: "Honestly, I think vacations are kind of essential, not just a luxury. Like, these days everyone's so busy and stressed out from work and daily life. So just taking a break — even a short one — really helps you relax and recharge. And it's not just about physical rest either. Mentally, it makes a huge difference. When you take time off, you can kind of step away from all your worries for a bit, and you come back feeling so much fresher. Plus, vacations are actually really good for relationships. Like, when you spend quality time with family or friends on a trip, you end up having real conversations and making memories together. That stuff matters. Oh, and there's the whole new experience thing too. You get to try different activities, see new places, maybe even learn something you didn't expect. It just makes life more interesting, you know? So yeah, vacations aren't just about having fun — they keep you healthy, less stressed, and closer to the people you care about."
+                    },
+                    {
+                        type: "general",
+                        q: "Who are the people you would like to see and spend time with on your vacation?",
+                        a: "So I'm more of a stay-at-home vacation type, and for me it's really about spending time with family and a few close friends. Like, with my family — I'm usually so busy with work that I don't get to see them nearly enough. So when I'm on vacation, we'll have meals together, watch TV, just hang around the house. It sounds boring, I know, but honestly those moments mean a lot to me. And then I like to catch up with a couple of close friends too. But nothing crazy — I'd rather have them come over to my place or I'll go to theirs. We'll order some food, talk for hours about everything and nothing, maybe throw on a movie. It's super low-key but it actually recharges me more than any fancy trip would. I mean, at the end of the day, being around people I'm comfortable with in a relaxed setting — that's my ideal vacation right there."
+                    },
+                    {
+                        type: "general",
+                        q: "Describe some of the things you would like to do with people during your vacation.",
+                        a: "Well, since I usually stay home for vacation, we keep it pretty simple but it's still really nice. Like with my family, we'll cook together or just order something good and eat at home. Then we'll sit around the table talking about what's been going on in our lives, maybe put on a movie. Nothing fancy at all, but I actually love those moments because it feels so relaxed and, like, connected. With friends, it's super casual too. We might hit up a cafe, go for a walk, or honestly just end up at someone's place doing nothing. Most of the time we're just talking for hours about random stuff — work drama, hobbies, funny things that happened. Oh, and sometimes we'll start a TV series and just binge the whole thing in one sitting. But honestly, I don't think it really matters what we're doing. It's more about who I'm with, you know? As long as I'm around people I feel comfortable with, I'm good."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about the most memorable vacation you have spent at home.",
+                        a: "Oh man, so this was during COVID, a few years back. I couldn't go anywhere obviously, so I just stayed home with my family. And I'm not gonna lie, at first I thought it was gonna be so boring. But it turned out way better than I expected. So at first we just ordered a ton of food and lounged around the house. We watched movies together and actually talked — like really talked — which we never do because everyone's always so busy. And then as the days went on, we started cooking together, taking little walks around the neighborhood, just simple stuff. I also had a close friend come over at one point and we literally just sat there chatting and laughing for hours. By the end of it, I felt genuinely rested and recharged. I think what made it so memorable was just the quality time, you know? No pressure, no plans, just being with people I care about. So yeah, nothing exciting happened, but honestly it's probably one of the most meaningful vacations I've ever had."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                korean: "주거",
+                english: "Housing",
+                qa: [
+                    {
+                        type: "general",
+                        q: "How is the structure of houses different from the past?",
+                        a: "So, houses have changed a lot compared to the past. Back in the day, houses were pretty small and simple, right? There weren't that many rooms, and the spaces were basically just for sleeping and eating. And honestly, a lot of houses didn't even have proper heating or cooling systems. But now? Totally different. Houses are way more modern and functional. They're bigger, and every space has its own purpose — like you've got a living room, a separate kitchen, sometimes even a home office. And the biggest thing is probably technology. A lot of modern houses have smart devices now, like smart lighting or security systems, stuff that just makes life easier. People also care way more about comfort and design these days. So houses are built with better insulation, better lighting, and nicer interiors. I think it all comes down to technology getting better and people's living standards going up. Yeah, houses used to be really basic, but now they're all about comfort and convenience."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about some housing problems that many people are facing these days.",
+                        a: "Oh, where do I start? I think the biggest one is definitely housing prices. Buying a house these days is insanely expensive, especially in big cities. A lot of people just can't afford it. And it's not just buying — even renting is a huge burden. Like, people are paying so much every month just for rent, it's really stressful. On top of that, there's a shortage of housing in some areas. Since everyone's moving to the cities for work, there just aren't enough places to go around, which makes everything worse. So what do people do? Some downsize — they move into smaller places or get roommates to split the cost. Others move out to the suburbs where it's cheaper, even though the commute is longer. And sometimes the government steps in with housing programs or financial support to help out. But yeah, it's still a really serious problem. High prices, limited supply — people are doing what they can, but it's tough."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                korean: "가구",
+                english: "Furniture",
+                qa: [
+                    {
+                        type: "roleplay",
+                        q: "[롤플레이] You are at a furniture store. Ask the clerk three or four questions.",
+                        a: "Hey, excuse me! I'm looking for a sofa, and actually, this one caught my eye. It looks really nice. So, how much is this one? Oh wow, that's a bit steep. Are there any sales or discounts going on right now by any chance? And what's the material? I'm looking for something that's, you know, easy to clean — I've got a thing about keeping stuff neat. Oh, also, do you guys do delivery? If so, how long would that take? And one more thing — what's the warranty like? Like, if something's wrong, can I return it or exchange it? Alright, that's everything. Thanks so much!"
+                    },
+                    {
+                        type: "sudden",
+                        q: "[돌발] Your furniture has a problem. Call the store and ask for an exchange or refund.",
+                        a: "Hi there, yeah, I'm calling about a sofa I just got delivered today? So I ordered it from your store, and when it arrived, I noticed one of the legs is broken. Like, the whole thing wobbles when you sit on it — it's pretty bad. So I was wondering, can I get this exchanged or maybe get a refund? What are my options here? Also, do I need to send it back myself, or can you guys come pick it up? Because honestly, it's kind of heavy and I'd rather not deal with that. And how long would the whole thing take? I'd really appreciate it if we could sort this out quickly. Thanks."
+                    },
+                    {
+                        type: "experience",
+                        q: "[경험] Tell me about a time when you had problems with your furniture.",
+                        a: "Okay so, this actually turned into a pretty cool story. Basically, our old sofa started falling apart. Like, the cushions went completely flat, the frame was making these weird creaking noises, and it was just not comfortable anymore — especially when we'd all sit together to watch TV. At first, we just kind of ignored it, you know? But it kept getting worse, and the living room stopped feeling cozy. So instead of just replacing the sofa, I thought, why not go bigger with this? I decided to turn the whole living room into a mini home theater. I got a new sofa with a reclining function — so we can lean all the way back, like we're at an actual movie theater. Then I rearranged all the furniture so everything faced the TV properly, added some soft lighting, and put up thicker curtains to make the room darker. And honestly? It turned out amazing. The living room felt completely different — way more comfortable and relaxing. Now my family and I actually spend more time there watching movies together, and the whole space just feels special. It's funny because what started as an annoying broken sofa ended up being one of the best changes I've ever made to my home."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                korean: "배달/테이크아웃",
+                english: "Take-out / Delivery",
+                qa: [
+                    {
+                        type: "general",
+                        q: "Tell me about take-out or delivery restaurants that you like.",
+                        a: "So my go-to for delivery is definitely McDonald's. I mean, who doesn't know McDonald's, right? There's one right near my house, but honestly, they're pretty much everywhere, so I don't even bother going in person most of the time. I just order delivery. We get it maybe once a month — it's like a little family thing, usually on weekends. My favorite is the Shanghai Chicken Burger. I actually prefer it over the regular beef ones because it feels a bit lighter, you know? The chicken's got this nice crispy coating but it's not super greasy, and it goes really well with the fresh veggies inside. So yeah, whenever nobody wants to cook, McDonald's is always the move."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about a take-out or delivery restaurant you got food from recently.",
+                        a: "So just last weekend, I got McDonald's delivered. I went with my usual — the Shanghai Chicken Burger set, which comes with fries and a drink. I'm kind of obsessed with that burger honestly, because the chicken is really crispy but not too heavy, and the vegetables make it taste fresh. It was a Sunday evening and I was just at home, totally not in the mood to cook. So I figured, why not just get delivery? My family and I ate together and it was actually really nice — nothing fancy, but after a long week it felt like a little reward, you know? Super easy, super satisfying. That's what I love about delivery — you don't have to do anything and you still get a good meal."
+                    },
+                    {
+                        type: "general",
+                        q: "Talk about a time when you prepared food for a special occasion using delivery.",
+                        a: "Oh yeah, so one time we had a small birthday party at home for one of my family members, and nobody really felt like spending hours in the kitchen. So we just went ahead and ordered McDonald's. We got a bunch of stuff — burgers, fries, chicken nuggets, drinks, the whole deal. I obviously got my Shanghai Chicken Burger. The food actually showed up right on time, and it was still warm and fresh, which was great. We set everything up on the table and just sat down and enjoyed it together. It wasn't anything huge or fancy, but honestly it was really cozy. And I think that's what made it nice — like, instead of stressing about cooking, we actually got to just hang out and talk and have a good time. So yeah, it turned out to be a pretty memorable little celebration, even though it was just delivery food."
+                    }
+                ]
+            },
+            {
+                id: 7,
+                korean: "부동산/수리",
+                english: "Real Estate / Repair",
+                qa: [
+                    {
+                        type: "roleplay",
+                        q: "[롤플레이] Call a real estate agency about an apartment.",
+                        a: "Hi there, I'm calling because I'm looking for an apartment. Yeah, I'm planning to move pretty soon, so I need a place in the city. I'm thinking a one-bedroom, ideally close to a subway station. And if possible, I'd really prefer something newer or at least recently renovated — I'm not really into older buildings. Oh, you have something? How much is the rent on that one? Hmm, that's a bit steep for me honestly. Do you have anything a little more affordable? Oh really? Okay, that sounds way better. Can you tell me a bit more about it? Nice, I like the sound of that. So would it be possible to see the place this Saturday? Like around 2 p.m.? Oh, 2 doesn't work — how about 3 then? That works? Perfect. So let's meet at 3 — should we say Gangnam Station exit 3? Great, sounds like a plan. Thanks so much, I'll see you Saturday!"
+                    },
+                    {
+                        type: "sudden",
+                        q: "[돌발] Your apartment window is broken. Call the repair shop.",
+                        a: "Hi, yeah, I'm calling because I've got a problem with a window in my apartment. So I actually just moved in recently, and I noticed one of the windows is broken. It won't close properly, which is a real problem because, you know, I'm worried about safety, and at night it gets really cold with the air coming in. So I really need to get this fixed as soon as I can. Is there any chance you could send someone out today, or maybe tomorrow morning at the latest? Oh, that'd be amazing. Also, do you have a rough idea of how long it would take and what it might cost? Okay, yeah, that sounds fair. I really appreciate it — if you could get it done quickly, that would honestly be a huge help. Thanks so much."
+                    },
+                    {
+                        type: "experience",
+                        q: "[경험] Tell me about a time when you found something broken. (Air conditioner story)",
+                        a: "Oh man, so this was a few years ago — it was like mid-August, absolute peak summer. Every single day the news was saying it's a historic heatwave, record-breaking temperatures, all that. So normally what I'd do is turn on my AC from my phone before I got home, so the place would already be cool when I walked in. That day, I did the same thing, totally expecting my apartment to be nice and cold. But I got home and... nothing. It was boiling. I figured maybe it was just a connection issue with my phone, so I tried again. Still nothing. I started panicking a little, you know? So I called a repair service right away, and they told me I'd have to wait a WEEK because apparently everyone's AC was breaking down at the same time. I couldn't believe it. A whole week in that heat with no air conditioning? But I mean, what could I do? I turned on every fan I had, even borrowed one from a friend. But honestly, it barely helped. The worst part was nighttime — it was so humid and sticky I literally could not sleep. I'd go stand in front of the open freezer for a bit, take cold showers like every hour... it was a nightmare. A full week of that. So when the repair guy finally came and fixed it, and I turned it on and felt that cold air hit my face — I was like, oh thank God, I could've cried. And ever since then, I always check my AC before summer starts. Like, that thing is precious to me now."
+                    }
+                ]
+            },
+            {
+                id: 8,
+                korean: "여행",
+                english: "Travel",
+                qa: [
+                    {
+                        type: "general",
+                        q: "How is traveling today different from the past?",
+                        a: "Oh, traveling now is totally different from how it used to be. I mean, transportation has improved so much that it's just way easier to get around. Back in the day, people mostly traveled within the country because, you know, there weren't that many flights. My parents always told me they'd take trains or buses everywhere, and it took forever to get anywhere. And going abroad? That was like a huge deal — super expensive and complicated, so most people just didn't do it. But now? It's a completely different story. There are so many flights every day, and you can just go online, book a ticket at a decent price, and honestly, some people even do weekend trips to other countries. That's crazy if you think about it. That said, it's not all perfect. Popular tourist spots get insanely crowded these days, and flight delays or cancellations — those are still really stressful. So yeah, traveling's gotten way more convenient overall, but it definitely still has its headaches."
+                    },
+                    {
+                        type: "general",
+                        q: "What are some issues or concerns people have related to traveling?",
+                        a: "Honestly, there are a few things that can be pretty annoying when you travel. The biggest one is probably cost. Flights, hotels, food — it all adds up fast, especially if you're going abroad. So what people do is, they book stuff way in advance or hunt for deals online. A lot of people also go with budget airlines or stay at hostels to save money. And then there's the overcrowding problem. Like, you go to some famous tourist spot and it's just packed — wall to wall with people. It kind of ruins the whole experience, honestly. So some people try to travel in the off-season or pick places that aren't as well known. Safety's another thing, especially in countries you've never been to before. Most people I know will do a bunch of research ahead of time, read reviews, and just be extra careful with their stuff. So yeah, there are definitely some challenges, but I think people have gotten pretty smart about handling them."
+                    }
+                ]
+            },
+            {
+                id: 9,
+                korean: "재활용",
+                english: "Recycling",
+                qa: [
+                    {
+                        type: "general",
+                        q: "How is recycling you practiced when you were young different from today?",
+                        a: "So when I was a kid, recycling was honestly not a big thing at all. We didn't really separate our trash that carefully — most of the time, everything just went into one bag and that was it. And there weren't many recycling bins around, not in public places, not even in apartment buildings. It just wasn't that convenient. But now it's like a whole different world. Everything is super organized. You've got separate bins for plastic, paper, glass, food waste — all of it. I actually separate recyclable stuff every day at home. I even wash plastic containers and peel off the labels before tossing them. I think the biggest change is that people are just way more aware of environmental issues now, so they actually make an effort. But you know what's funny? Even back then, everyone kind of knew recycling was important — we just didn't have the systems to make it easy. Now we do, so it's become a regular part of daily life."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about something you heard or read about recycling in the news recently.",
+                        a: "Yeah, actually, I read this article a while back that was pretty interesting. It was about how China decided to stop importing plastic waste from other countries. They did that because all that plastic was causing serious environmental damage. And the thing is, a ton of countries had been sending their plastic to China for years, so when that stopped, they were suddenly stuck with all this waste and no idea what to do with it. Korea got affected too. We started changing some of our recycling policies because of it. Like now, you have to separate clear plastic from colored or wrapped plastic — they're much stricter about that. And in cafes, they're pushing people to use reusable cups, like mugs, instead of disposable ones. Oh, and plastic straws are being swapped out for paper ones. I think all of these changes are really about reducing plastic waste and, you know, trying to protect the environment. It was actually a pretty eye-opening article."
+                    },
+                    {
+                        type: "general",
+                        q: "How do you personally recycle in your daily life?",
+                        a: "So I actually try to recycle pretty consistently. Every day at home, I separate my trash — plastic goes in one bin, paper in another, glass, food waste, all separate. Korea's recycling rules are honestly pretty strict, so you kind of have to stay on top of it. Like, before I throw away a plastic bottle, I'll wash it out and pull off the label. Food waste goes into its own special bag — that's a whole separate thing here. Then in the evening, I take everything down to the recycling area in my apartment complex. They've got different bins for each type, so sorting it out is actually pretty straightforward. I mean, I just think it matters, you know? It helps the environment and cuts down on waste. So I try to keep it up as much as I can."
+                    }
+                ]
+            },
+            {
+                id: 10,
+                korean: "이웃 나라",
+                english: "Neighboring Country",
+                qa: [
+                    {
+                        type: "general",
+                        q: "Talk about a country geographically close to your country and its recent changes.",
+                        a: "So, China is right next to Korea — it's literally one of our closest neighbors. It's massive, obviously, with a huge population, and a lot of Koreans go there for business or just traveling around. And honestly, China's changed so much in the last few years. The biggest thing is probably technology. Like, everyone there uses QR code payments for everything — people don't even carry cash anymore, which is kind of crazy. And cities like Beijing and Shanghai? They've gotten so modern. You've got these huge skyscrapers everywhere, really advanced public transportation, and just, you know, everything's super convenient now. Oh, and the environment thing — that's been a big shift too. Air pollution used to be really bad, like seriously bad, but the government's been pushing hard on cleaning that up and going more eco-friendly. So yeah, I'd say China's changed pretty dramatically. It's way more advanced and globalized than even just ten years ago."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about an article you read about that country.",
+                        a: "Oh yeah, I actually read something really interesting about recycling in China. Basically, China decided to stop importing plastic waste from other countries. They just said, we're done with that, because all that plastic was causing serious environmental problems. And the thing is, that decision hit a lot of countries really hard. Like, so many places had been just shipping their plastic to China for years, so when that stopped, they suddenly had all this waste and no idea what to do with it. Even in Korea, we had to change things up. Now we separate transparent plastic more carefully, and a lot of cafes are pushing reusable cups instead of disposable ones. I mean, when you think about it, it's both a political and an economic issue. Politically, it was the government stepping in to protect the environment and public health. But economically? It shook up global trade because countries had to spend way more money dealing with their own waste. So it wasn't just a China thing — it really affected everyone."
+                    }
+                ]
+            },
+            {
+                id: 11,
+                korean: "인터넷",
+                english: "Internet",
+                qa: [
+                    {
+                        type: "general",
+                        q: "What do people usually use the internet to do?",
+                        a: "Oh, I mean, what don't people use the internet for these days? There's the obvious stuff — work and study. People send emails, hop on online meetings, look things up. And then there's the fun side, like watching videos, streaming shows, playing games, all that. The people around me, honestly, it's kind of a mix of both. My coworkers are on it all day for work stuff — emails, sharing documents, that kind of thing. But then after work, they switch right over to YouTube or Netflix to unwind. And some of my friends are really into online games, especially on weekends — they'll play for hours. I think at this point the internet's just, you know, completely built into our daily lives. It's hard to imagine getting through a day without it because it just saves so much time and makes everything easier."
+                    },
+                    {
+                        type: "general",
+                        q: "What do you normally do online?",
+                        a: "Honestly, I'm online pretty much all the time. The thing I do most is probably just searching for stuff — like news, weather, or random things I'm curious about. It's so easy to just pull up my phone and find whatever I need in seconds. And then after work, I watch a ton of videos. YouTube mostly, or sometimes streaming services. It's kind of my way of unwinding, you know? I also do a fair amount of online shopping — clothes, everyday stuff, electronics. I like it because I can compare prices really easily and check reviews before I buy anything. Way better than just walking into a store and guessing. Oh, and obviously messaging. I'm always chatting with friends and family through apps, and sometimes we do video calls too. So yeah, I basically rely on the internet for, like, everything at this point. It just makes life so much more convenient."
+                    },
+                    {
+                        type: "general",
+                        q: "Describe some of your early memories of surfing the internet.",
+                        a: "Oh man, that takes me back. When I first started using the internet, I was pretty young, and it was so slow. Like, painfully slow. You'd click on a webpage and just sit there waiting forever, and sometimes the connection would just drop out of nowhere — super frustrating. Back then, I mostly used it for really basic stuff. Looking up simple information, playing those old online games — nothing fancy. And the thing is, we only had a desktop computer at home, so I couldn't just go online whenever I wanted. I had to actually sit down at the desk and use it there. Compared to now, it's like a completely different world. Now everything's fast, it's stable, and I've got the internet right in my pocket on my phone. Plus there's streaming, online shopping, social media — none of that really existed back then, at least not the way it does now. It's actually pretty wild how far things have come when I think about it."
+                    }
+                ]
+            },
+            {
+                id: 12,
+                korean: "명절",
+                english: "Holidays",
+                qa: [
+                    {
+                        type: "roleplay",
+                        q: "[롤플레이] Call your friend and ask about the holiday meal.",
+                        a: "Hey Jenny! Thanks so much for inviting me, by the way. So I'm calling because I wanted to check on a few things about the meal. What time does it start? Around 1 p.m.? Cool, that works for me. Oh, and should I bring anything? Like drinks, fruit, maybe dessert? Dessert? Yeah, I can totally do that. No problem. So what are you making, by the way? Oh, tteokguk? Nice, I love that. And how many people are coming? Oh okay, so it's more of a small thing. That's nice, actually. Oh, one more thing — should I dress up or is it pretty casual? Casual? Perfect. Hey, do you need help setting up or anything? I don't mind coming early. Really? Okay great, I'll head over a bit early then. Alright, see you soon. Thanks again, Jenny!"
+                    },
+                    {
+                        type: "sudden",
+                        q: "[돌발] Your car broke down on the way. Call your friend.",
+                        a: "Hey Jenny, so... I've got some bad news. My car just broke down on the way to your place. Yeah, it literally just stopped in the middle of the road and wouldn't start again. I had to pull over and call roadside assistance. So there's no way I can drive there now. I'm gonna take a taxi once the car gets towed, but honestly, it's probably gonna take a while. I'm thinking maybe 30 minutes late? I'm really sorry about this. I feel so bad. But I'll get there as fast as I can, I promise. Alright, see you soon. And thanks for being cool about it."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about a holiday in your country. What do people do?",
+                        a: "So one of the biggest holidays we have in Korea is Seollal — it's basically Korean New Year. It goes on for a few days, and everyone just takes a break and spends time with family. The thing is, like, almost everyone travels back to their hometown, so the roads and trains get insanely packed. It honestly feels like the whole country is moving at the same time. People usually dress up nice — some wear traditional clothes — and the whole vibe is really calm and respectful compared to other holidays. What I like about Seollal is it's not just about chilling. It's really about connecting with family and showing respect to your elders. It's one of those holidays that actually feels meaningful, you know?"
+                    },
+                    {
+                        type: "general",
+                        q: "What are some activities people engage in on that holiday?",
+                        a: "Oh, there's actually a lot going on during Seollal. So in the morning, the whole family gets together and prepares food — that's a big part of it. Then everyone sits down and eats together, and tteokguk is like the must-have dish. After the meal, the younger people do this traditional bow to the elders called sebae. It's basically a way of showing respect, and then the elders give you blessings and, you know, sometimes money too, which is nice. Then later in the day, it's more relaxed. People just hang out, watch TV, or play this traditional board game called yutnori — it actually gets pretty competitive. Some families visit other relatives or just go for a walk. I think what makes it special is that everyone's really together for the whole day. It's not like people are on their phones the whole time. It's genuinely warm."
+                    }
+                ]
+            },
+            {
+                id: 13,
+                korean: "호텔",
+                english: "Hotels",
+                qa: [
+                    {
+                        type: "general",
+                        q: "What are hotels like in your country?",
+                        a: "Hotels in Korea are honestly pretty impressive. They're really clean and well-organized — like, that's kind of the standard here. Most of them have all the modern stuff you'd expect: fast Wi-Fi, smart TVs, good amenities. And they're usually in convenient locations, especially in big cities like Seoul or Busan, near tourist spots or subway stations. One thing I think stands out is the service. The staff are super polite and helpful, which just makes everything smoother. And compared to some hotels I've seen in other countries, Korean hotels are really efficient. Like, check-in and check-out are usually super quick — no hassle at all. So yeah, I'd say Korean hotels are modern, convenient, and the service is really solid."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about a memorable hotel you stayed at.",
+                        a: "Oh, this one's easy. I stayed at this hotel in Busan a while back — it was a short family vacation. I picked it because it had amazing ocean views and the reviews online were really good. I always check reviews before I book anything, actually. And honestly, the view did not disappoint. I could see the ocean right from the room, and at sunset it was just... incredible. The room itself was really clean and comfortable too, and the staff were super friendly. But the thing I remember most is waking up the next morning and just seeing the ocean right there. It was so peaceful. That kind of moment just sticks with you, you know?"
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about the things you do when you arrive at a hotel.",
+                        a: "So when I get to a hotel, first thing is obviously checking in at the front desk — confirm the reservation, show my ID, grab the key. Then I go straight to the room and kind of do a quick check. Like, I make sure everything's clean, the AC works, all that stuff. After that, I unpack and get my things organized because I don't like living out of a suitcase. Once I'm settled, I might just lie down for a bit or wander around the hotel to see what they've got — like a gym or a lounge or whatever. If I'm somewhere new, I'll also look up nearby restaurants or places to check out. I basically just try to get comfortable as fast as possible so I can actually start enjoying the trip."
+                    }
+                ]
+            },
+            {
+                id: 14,
+                korean: "공원",
+                english: "Parks",
+                qa: [
+                    {
+                        type: "general",
+                        q: "Tell me about one of the parks that you often visit. What does it look like?",
+                        a: "So my go-to park is Olympic Park. It's in Seoul, really close to where I live — like, maybe a 10-minute walk? Super convenient. I usually head there about once a week with my family, mostly on weekends. It's a really big park, honestly. There are a few stadiums, wide open fields, nice walking trails, and even this big lake. Because it's so spacious, it never really feels crowded, which I love. You see all kinds of people there — some are jogging, others riding bikes or walking their dogs. A lot of families just sit on the grass and have picnics. When I go, I usually play catch or ride a bike, but mostly I end up running around with my little son in the open area. He's obsessed with the grass field — he just runs and runs, you know? We always have a blast. That's basically why I keep going back. It's just our favorite spot."
+                    },
+                    {
+                        type: "general",
+                        q: "Which park did you visit recently? What did you do?",
+                        a: "Oh, so recently I went to this beachside park called Yangyang Beachside Park. It's on the East Sea, about three hours by car from where I live, so it's not exactly close. We usually go there during summer vacation as a family trip. The cool thing is it's right next to the beach, so you get the best of both worlds. You can do water stuff at the beach and then chill out or ride bikes in the park. But honestly, the main reason I love going there is the surfing. Yangyang Beach is actually famous for it. Here's the backstory — about five years ago, I went to Portugal with a friend and learned how to surf there. It was amazing. When I got back to Korea, I started looking for good surfing spots, and Yangyang kept coming up. So now whenever we visit, I hit the waves first, and then we spend the rest of the day just relaxing at the park with the family. It's kind of the perfect combo, you know? Beach and park, all in one place."
+                    },
+                    {
+                        type: "general",
+                        q: "Tell me about a memorable or interesting event that happened in a park.",
+                        a: "Oh man, this one still bugs me. Last summer, I went to Sokcho Beachside Park with some friends. The weather was amazing, I was in a great mood — we played soccer, took a bunch of pictures, just having a really good time. Then all of a sudden, I reached for my phone and... it wasn't there. I completely panicked. I started looking everywhere, checking my pockets, my bag, the ground. And then it hit me — I'd left it on a bench earlier. So I ran back as fast as I could, but it was gone. Just... gone. I asked people around, went to the lost and found, everything. Nothing. I was so upset. It honestly ruined the rest of the day for me. I mean, I couldn't even enjoy anything after that. Since then, I always double-check my stuff — like, obsessively. Lesson learned the hard way."
+                    }
+                ]
+            },
+            {
+                id: 15,
+                korean: "MP3 플레이어",
+                english: "MP3 Player",
+                qa: [
+                    {
+                        type: "roleplay",
+                        q: "[롤플레이] Call your friend and ask about the MP3 player he or she is using.",
+                        a: "Hey Jenny! How's it going? So I heard you got a new MP3 player — it's the new Apple one, right? I've actually been thinking about getting the same one, so I wanted to pick your brain a little. Where'd you buy it? The official website? Did you get any kind of discount? Oh, 10% off for new customers until next weekend? Nice! What color did you go with? White? Do they have it in black? Oh... it's out of stock right now? That's a bummer. So overall, do you think it's better than the last model? Would you recommend it? Okay cool, that's really helpful. Thanks so much, Jenny. I'll talk to you later. Bye!"
+                    },
+                    {
+                        type: "sudden",
+                        q: "[돌발] You broke your friend's MP3 player. Call and explain.",
+                        a: "Hey Jenny, it's me. How are you? Listen, I need to tell you something, and I feel really terrible about this. I broke your MP3 player. I know, I know — I'm so sorry. What happened was, I was running on the treadmill and it slipped out of my hand. It flew across the room and just... smashed. It was a total accident, but still, I feel awful. Do you have Apple Care on it by any chance? If not, I'll totally pay to replace it. We could go to the Apple Store together and pick out a new one, or I can just order one online — whatever works for you. Seriously, I want to make this right. Are you free this weekend? How about Saturday at 2? Okay great, let's do that. Again, I'm really sorry about this."
+                    },
+                    {
+                        type: "experience",
+                        q: "[경험] Tell me about a time when you broke something at home.",
+                        a: "So this is actually a fun story because something breaking turned into something really good. Basically, our old sofa started falling apart. The cushions went flat, the frame was making these weird creaky noises, and it just wasn't comfortable anymore — especially when we'd try to watch TV together as a family. We tried to ignore it for a while, but it kept getting worse, and the living room just didn't feel cozy anymore. So instead of just replacing the sofa, I thought, you know what, why not go bigger? I decided to turn the whole living room into a little home theater. I got a new sofa with a reclining function so we can lean all the way back — like actual movie theater seats. Then I rearranged the furniture so everything faces the TV properly, added some softer lighting, and put up thicker curtains to make the room darker. And honestly? It turned out amazing. The living room feels completely different now — way more comfortable and relaxing. My family and I actually spend more time there watching movies together, which is great. So yeah, what started as a broken sofa ended up being one of the best upgrades I've made to our home. I'm actually glad it broke."
+                    }
+                ]
+            },
+            {
+                id: 16,
+                korean: "음악",
+                english: "Music",
+                qa: [
+                    {
+                        type: "general",
+                        q: "Pick two different types of music or composers you like. Compare them.",
+                        a: "Okay so two musicians I really love are IU and BTS. They're both huge in Korea, but their styles are totally different. IU is a solo artist, and she's mainly known for ballads. Her voice is so calm and pure — it's really emotional. My favorite song of hers is Through the Night. The lyrics are just so soft and touching, you know? Whenever I need some quiet time or just want to wind down, that's my go-to. BTS, on the other hand, is a whole different vibe. They're famous worldwide, and a lot of their songs are super upbeat and powerful. Their performances are insane — so much energy. My favorite is Not Today. That last choreography part? Incredible. So I actually listen to it a lot when I'm working out. It really gets me pumped. So basically, IU is for when I want to feel something calm and emotional, and BTS is for when I need energy. They're complete opposites, but I love both depending on what mood I'm in."
+                    },
+                    {
+                        type: "general",
+                        q: "What is one of the most popular music gadgets these days?",
+                        a: "I mean, this one's pretty obvious — it's the smartphone. That's how most people listen to music now, right? It's just so convenient. You can listen anywhere — on the bus, at the gym, walking around, wherever. And it's ridiculously easy to use. You just download a streaming app like Spotify, YouTube, or Melon, and boom — you've got access to millions of songs instantly. No CDs, no separate devices. That's actually the biggest thing — nobody needs to carry around an MP3 player anymore. Your phone does everything. It's all in one device, which makes life so much simpler. That's basically why smartphones have taken over as the number one way people listen to music these days."
+                    }
+                ]
+            },
+            {
+                id: 17,
+                korean: "시간 관리",
+                english: "Time Management",
+                qa: [
+                    {
+                        type: "general",
+                        q: "How do you manage your time on a daily basis?",
+                        a: "So I actually try to be pretty intentional about managing my time. First off, I'm an early riser — I wake up around 6 AM, which gives me enough time to get ready without rushing, and that kind of sets the tone for the whole day. I'm big on making lists. I write down what I need to do and tackle the important stuff first. During work, I try not to get sucked into distractions — like, I won't just randomly scroll through social media. I set specific times to check emails and messages so I can actually focus on real work. Then in the evening, I make a point to shut off work mode. I usually wrap up around 6 PM and spend time with my family or get some exercise in. Before bed, I take about 30 minutes to just relax and wind down. I mean, it doesn't always go perfectly — some days things just go sideways. But I try to adapt and not stress about it too much. I think having that routine, even loosely, keeps me productive and, honestly, healthier overall."
+                    },
+                    {
+                        type: "general",
+                        q: "What are some challenges you face with time management?",
+                        a: "Honestly, there are a few things I still struggle with. The biggest one is probably unexpected stuff at work. You know, you've got your whole day planned out, and then some urgent task drops out of nowhere and throws everything off. That can mess up my entire schedule. And I'll admit, I procrastinate sometimes. Even when I know something's important, I'll put it off, and then I end up stressed later trying to finish it. It's a bad habit. Another thing is separating work from personal time. I catch myself thinking about work stuff even when I'm supposed to be off, and that makes it really hard to fully relax. It's like my brain doesn't have an off switch sometimes. Also, juggling multiple projects at once is tough. When there's a lot going on, it's hard to give each thing the attention it deserves. But I've picked up some tricks that help. I use a calendar app to track deadlines, and I break big projects into smaller pieces so they feel less overwhelming. And I'm trying to be more flexible — just accepting that I can't control everything, you know? That mindset actually helps a lot."
+                    }
+                ]
+            }
+        ];
+
+        let currentTopicId = 1;
+        let currentSpeed = 0.95;
+        let isPlayingAll = false;
+        let currentPlayingIndex = -1;
+        let synth = window.speechSynthesis;
+        let currentUtterance = null;
+        let selectedVoice = null;
+        let availableVoices = [];
+        let stopRequested = false;
+
+        // Voice quality ranking - prefer natural/neural voices
+        const VOICE_PRIORITY = [
+            // Google neural voices (Chrome)
+            'Google US English',
+            'Google UK English Female',
+            // Microsoft neural voices (Edge)
+            'Microsoft Jenny Online',
+            'Microsoft Aria Online',
+            'Microsoft Jenny',
+            'Microsoft Aria',
+            'Microsoft Zira',
+            // Apple voices (Safari)
+            'Samantha',
+            'Karen',
+            'Moira',
+            // Fallback patterns
+            'Natural',
+            'Neural',
+            'Premium',
+            'Enhanced',
+        ];
+
+        function getBestVoice() {
+            const voices = synth.getVoices();
+            availableVoices = voices.filter(v => v.lang.startsWith('en'));
+
+            // Try priority list first
+            for (const name of VOICE_PRIORITY) {
+                const found = availableVoices.find(v => v.name.includes(name));
+                if (found) return found;
+            }
+
+            // Try any female-sounding English voice
+            const femalePatterns = ['female', 'Female', 'woman', 'Girl', 'Jenny', 'Aria', 'Zira', 'Samantha', 'Karen', 'Amy'];
+            for (const pat of femalePatterns) {
+                const found = availableVoices.find(v => v.name.includes(pat));
+                if (found) return found;
+            }
+
+            // Fallback to first English voice
+            return availableVoices[0] || voices[0] || null;
+        }
+
+        function populateVoiceSelector() {
+            const selector = document.getElementById('voiceSelector');
+            if (!selector) return;
+            const voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+            selector.innerHTML = voices.map((v, i) =>
+                `<option value="${i}" ${v === selectedVoice ? 'selected' : ''}>${v.name} (${v.lang})</option>`
+            ).join('');
+            selector.onchange = () => {
+                selectedVoice = voices[parseInt(selector.value)];
+            };
+        }
+
+        // Split text into sentences for natural pauses
+        function splitSentences(text) {
+            // Split on sentence-ending punctuation followed by space
+            return text.match(/[^.!?]+[.!?]+[\s]?/g) || [text];
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            renderContent();
+            setupEventListeners();
+
+            // Load voices (may be async)
+            function initVoices() {
+                selectedVoice = getBestVoice();
+                populateVoiceSelector();
+            }
+            initVoices();
+            synth.onvoiceschanged = initVoices;
+
+            // Check for saved theme preference
+            try {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.getElementById('themeToggle').textContent = '☀️';
+                }
+            } catch(e) {}
+        });
+
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.innerHTML = topics.map(topic => `
+                <div class="topic-tab ${topic.id === currentTopicId ? 'active' : ''}" data-id="${topic.id}">
+                    <div class="topic-name">${topic.korean}</div>
+                    <div class="topic-subtitle">${topic.english}</div>
+                </div>
+            `).join('');
+
+            sidebar.querySelectorAll('.topic-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    currentTopicId = parseInt(tab.dataset.id);
+                    renderSidebar();
+                    renderContent();
+                });
+            });
+        }
+
+        function renderContent() {
+            const content = document.getElementById('content');
+            const topic = topics.find(t => t.id === currentTopicId);
+
+            if (!topic) {
+                content.innerHTML = '<div class="empty-state">Select a topic</div>';
+                return;
+            }
+
+            content.innerHTML = topic.qa.map((qa, idx) => {
+                let badgeClass = 'badge-general';
+                let badgeText = 'General';
+
+                if (qa.type === 'roleplay') {
+                    badgeClass = 'badge-roleplay';
+                    badgeText = '롤플레이';
+                } else if (qa.type === 'sudden') {
+                    badgeClass = 'badge-sudden';
+                    badgeText = '돌발';
+                } else if (qa.type === 'experience') {
+                    badgeClass = 'badge-experience';
+                    badgeText = '경험';
+                }
+
+                return `
+                    <div class="question-block">
+                        <div class="badge badge-${qa.type}">${badgeText}</div>
+                        <div class="question">Q${idx + 1}: ${qa.q}</div>
+                        <div class="answer-container">
+                            <div class="answer-text" id="answer-${currentTopicId}-${idx}">
+                                ${qa.a}
+                            </div>
+                            <div class="audio-controls">
+                                <button class="btn-play" data-topic="${currentTopicId}" data-index="${idx}">
+                                    <span>▶</span> Play
+                                </button>
+                                <button class="btn-play" style="background-color: #ef4444;" data-stop="${currentTopicId}-${idx}" title="Stop">
+                                    <span>⏹</span> Stop
+                                </button>
+                            </div>
+                            <div class="playback-info" id="info-${currentTopicId}-${idx}"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add event listeners
+            content.querySelectorAll('.btn-play[data-topic]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const topicId = parseInt(btn.dataset.topic);
+                    const index = parseInt(btn.dataset.index);
+                    playAnswer(topicId, index);
+                });
+            });
+
+            content.querySelectorAll('[data-stop]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    stopRequested = true;
+                    synth.cancel();
+                    document.querySelectorAll('.playback-info').forEach(info => {
+                        info.textContent = '';
+                    });
+                });
+            });
+        }
+
+        function playAnswer(topicId, index) {
+            synth.cancel();
+            stopRequested = false;
+
+            const topic = topics.find(t => t.id === topicId);
+            const qa = topic.qa[index];
+            const answerElement = document.getElementById(`answer-${topicId}-${index}`);
+            const infoElement = document.getElementById(`info-${topicId}-${index}`);
+            const fullText = qa.a;
+
+            // Split into sentences for natural pauses
+            const sentences = splitSentences(fullText);
+            let sentenceIndex = 0;
+            let spokenSoFar = '';
+
+            function speakNextSentence() {
+                if (stopRequested || sentenceIndex >= sentences.length) {
+                    // Done with all sentences
+                    infoElement.textContent = '';
+                    answerElement.innerHTML = escapeHtml(fullText);
+                    if (!stopRequested && isPlayingAll && currentTopicId === topicId) {
+                        if (index < topic.qa.length - 1) {
+                            setTimeout(() => playAnswer(topicId, index + 1), 800);
+                        } else {
+                            isPlayingAll = false;
+                        }
+                    }
+                    return;
+                }
+
+                const sentence = sentences[sentenceIndex].trim();
+                if (!sentence) { sentenceIndex++; speakNextSentence(); return; }
+
+                const utterance = new SpeechSynthesisUtterance(sentence);
+
+                // Apply selected voice
+                if (selectedVoice) utterance.voice = selectedVoice;
+
+                // Natural speech settings
+                utterance.rate = currentSpeed;
+                utterance.pitch = 1.0 + (Math.random() * 0.06 - 0.03); // Slight pitch variation
+                utterance.volume = 1.0;
+
+                // Highlight current sentence
+                utterance.onstart = () => {
+                    currentPlayingIndex = index;
+                    const before = spokenSoFar;
+                    const current = sentence;
+                    const after = fullText.substring(before.length + current.length);
+                    answerElement.innerHTML =
+                        escapeHtml(before) +
+                        '<span class="highlighted">' + escapeHtml(current) + '</span>' +
+                        escapeHtml(after);
+                    infoElement.textContent = 'Playing... (' + (sentenceIndex + 1) + '/' + sentences.length + ')';
+                };
+
+                // Word-level highlight within sentence
+                utterance.onboundary = (event) => {
+                    if (event.name === 'word') {
+                        const before = spokenSoFar;
+                        const currentHighlight = sentence.substring(0, event.charIndex + event.charLength);
+                        const restOfSentence = sentence.substring(event.charIndex + event.charLength);
+                        const after = fullText.substring(before.length + sentence.length);
+                        answerElement.innerHTML =
+                            escapeHtml(before) +
+                            '<span class="highlighted">' + escapeHtml(currentHighlight) + '</span>' +
+                            escapeHtml(restOfSentence) +
+                            escapeHtml(after);
+                    }
+                };
+
+                utterance.onend = () => {
+                    spokenSoFar += sentences[sentenceIndex];
+                    sentenceIndex++;
+                    // Natural pause between sentences (200-400ms)
+                    const pause = 250 + Math.random() * 150;
+                    setTimeout(speakNextSentence, pause);
+                };
+
+                utterance.onerror = (e) => {
+                    if (e.error !== 'canceled') {
+                        infoElement.textContent = 'Error: ' + e.error;
+                    }
+                };
+
+                synth.speak(utterance);
+            }
+
+            speakNextSentence();
+        }
+
+        function updateHighlight(element, upToText) {
+            const fullText = element.textContent;
+            element.innerHTML = `
+                <span class="highlighted">${escapeHtml(upToText)}</span>${escapeHtml(fullText.substring(upToText.length))}
+            `;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function setupEventListeners() {
+            // Play All
+            document.getElementById('playAllBtn').addEventListener('click', () => {
+                isPlayingAll = true;
+                synth.cancel();
+                const topic = topics.find(t => t.id === currentTopicId);
+                if (topic && topic.qa.length > 0) {
+                    playAnswer(currentTopicId, 0);
+                }
+            });
+
+            // Stop All
+            document.getElementById('stopAllBtn').addEventListener('click', () => {
+                isPlayingAll = false;
+                stopRequested = true;
+                synth.cancel();
+                document.querySelectorAll('.playback-info').forEach(info => {
+                    info.textContent = '';
+                });
+            });
+
+            // Speed controls
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentSpeed = parseFloat(btn.dataset.speed);
+                });
+            });
+
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                this.textContent = isDark ? '☀️' : '🌙';
+            });
+        }
+
+        // Chrome bug workaround: keep synth alive for long texts
+        setInterval(() => { if (synth.speaking) synth.resume(); }, 10000);
+    </script>
+</body>
+</html>
