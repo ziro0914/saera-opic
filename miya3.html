@@ -103,6 +103,9 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
 [data-theme="dark"] .trip-header {
   background: linear-gradient(135deg, #8B4530 0%, #7A3E2A 50%, #6B3624 100%);
 }
+/* 다크모드 표 행 강조 색상 (날씨 위험일) */
+[data-theme="dark"] tr[style*="background:#FFF4F2"] { background: #3A2A28 !important; }
+[data-theme="dark"] tr[style*="background:#FFF8E7"] { background: #3A322A !important; }
 .trip-header::after {
   content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 24px;
   background: linear-gradient(to bottom, transparent, var(--bg));
@@ -629,6 +632,94 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
 }
 .scroll-top.visible { display: flex; }
 
+/* ===== Critical Alert Cards & Badges ===== */
+.critical-banner {
+  background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+  color: #FFF;
+  padding: 14px 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.25);
+  border-bottom: 2px solid #991B1B;
+}
+.critical-banner a { color: #FEF3C7; text-decoration: underline; }
+.critical-banner .pulse {
+  display: inline-block;
+  width: 10px; height: 10px;
+  background: #FEF3C7;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: criticalPulse 1.5s ease-in-out infinite;
+}
+@keyframes criticalPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+.critical-card {
+  background: #FEF2F2;
+  border: 2px solid #DC2626 !important;
+  border-left: 6px solid #DC2626 !important;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.15);
+  position: relative;
+}
+[data-theme="dark"] .critical-card { background: #2C1818; }
+.critical-card::before {
+  content: '🚨 CRITICAL';
+  position: absolute;
+  top: -12px; left: 16px;
+  background: #DC2626;
+  color: #FFF;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+}
+.critical-card h4 {
+  color: #DC2626 !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  margin-top: 6px !important;
+  margin-bottom: 10px !important;
+}
+[data-theme="dark"] .critical-card h4 { color: #FCA5A5 !important; }
+.critical-card .info-row { color: var(--text); }
+.critical-card .info-row strong { color: #DC2626; }
+[data-theme="dark"] .critical-card .info-row strong { color: #FCA5A5; }
+.critical-card .check-action {
+  display: inline-block;
+  background: #DC2626;
+  color: #FFF;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-top: 8px;
+  text-decoration: none;
+}
+.critical-card .check-action:hover { background: #B91C1C; color: #FFF; text-decoration: none; }
+
+.critical-badge {
+  display: inline-block;
+  background: #DC2626;
+  color: #FFF;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: criticalPulse 2s ease-in-out infinite;
+}
+
 /* ===== Mobile ===== */
 @media (max-width: 768px) {
   body { font-size: 14.5px; }
@@ -688,12 +779,20 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
   </div>
 </header>
 
+<div class="critical-banner">
+  <span class="pulse"></span>
+  🚨 출발 전 직접 확인 필수 3건 — <a href="#" onclick="showSummary('checklist');return false;">출발전체크 탭 최상단 CRITICAL 카드 확인</a>
+</div>
+
 <div class="summary-tabs">
   <button class="summary-tab-btn active" onclick="showSummary('itinerary')">📋 일정</button>
   <button class="summary-tab-btn" onclick="showSummary('hotels')">🏨 숙소</button>
   <button class="summary-tab-btn" onclick="showSummary('food')">🍜 맛집</button>
   <button class="summary-tab-btn" onclick="showSummary('route')">🗺️ 전체경로</button>
-  <button class="summary-tab-btn" onclick="showSummary('checklist')" style="border-color:#e74c3c;color:#e74c3c;">✅ 출발전체크</button>
+  <button class="summary-tab-btn" onclick="showSummary('weather')" style="border-color:#3498db;color:#3498db;">🌦️ 날씨</button>
+  <button class="summary-tab-btn" onclick="showSummary('planb')" style="border-color:#9b59b6;color:#9b59b6;">🌧️ 플랜B</button>
+  <button class="summary-tab-btn" onclick="showSummary('whisky')" style="border-color:#a04e32;color:#a04e32;">🥃 위스키·사케</button>
+  <button class="summary-tab-btn" onclick="showSummary('checklist')" style="border-color:#DC2626;color:#DC2626;font-weight:700;">✅ 출발전체크 <span class="critical-badge">CRITICAL 3</span></button>
 </div>
 
 <div id="summary-itinerary" class="summary-section active"></div>
@@ -716,7 +815,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
     <div class="summary-card" style="border-left-color:#27AE60;">
       <h4>🏨 ANA Holiday Inn Resort Miyazaki by IHG (DAY7, 1박) ⭐ 신규</h4>
       <div class="info-row">📅 5/30(토)~5/31(일) [1박]</div>
-      <div class="info-row">📍 1-16-1 Aoshima, Miyazaki 889-2162 (青島 해변 바로 앞)</div>
+      <div class="info-row">📍 1-16-1 Aoshima, Miyazaki 889-2162 (Aoshima Beach 바로 앞)</div>
       <div class="info-row">📞 IHG 통합 / 호텔 공식: <a href="https://www.anahirmiyazaki.com/" target="_blank">anahirmiyazaki.com</a></div>
       <div class="info-row">⏰ 체크인 15:00 / 체크아웃 11:00</div>
       <div class="info-row">🅿️ 무료 주차장 (~200대)</div>
@@ -764,7 +863,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
     <div class="summary-card" style="border-left-color: #27AE60;">
       <h4>⭐ Hitotsuba Miyachiku 히토츠바 미야치쿠 데판야키 (DAY3 저녁 확정 — 스왑됨)</h4>
       <span class="food-tag">A5 Miyazaki Wagyu Teppanyaki 와규 데판야키</span>
-      <div class="info-row">📍 <strong>주소</strong>: 1401-255 Maehama, Shinbeppu-cho, Miyazaki 880-0834 / 一ッ葉ミヤチク</div>
+      <div class="info-row">📍 <strong>주소</strong>: 1401-255 Maehama, Shinbeppu-cho, Miyazaki 880-0834 / Hitotsuba Miyachiku</div>
       <div class="info-row">📞 ☎ 0985-28-2914 | ⏰ Lunch 11:00~14:00 / Dinner 17:00~20:30 (LO)</div>
       <div class="info-row">💰 디너 6,000~8,000엔/인 (사라다바·드링크바 포함)</div>
       <div class="info-row">⭐ <strong>시가이아 리조트와 같은 동네 (차량 5분)</strong> + 셰프 데판야키 쇼 + 피아노 라이브</div>
@@ -778,9 +877,9 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
     </div>
 
     <div class="summary-card" style="border-left-color: #27AE60;">
-      <h4>⭐ Ogura Segashira 오구라 세가시라점 (DAY7 저녁 확정 — 스왑됨)</h4>
+      <h4>⭐ Ogura Segashira 오구라 세가시라점 (DAY7 저녁 확정 — 스왑됨) <span class="critical-badge">CRITICAL</span></h4>
       <span class="food-tag">Original Chicken Nanban 치킨난반 원조</span>
-      <div class="info-row">📍 <strong>주소</strong>: 2-2-23 Segashira, Miyazaki 880-0867 / おぐら瀬頭店</div>
+      <div class="info-row">📍 <strong>주소</strong>: 2-2-23 Segashira, Miyazaki 880-0867 / Ogura Segashira-ten</div>
       <div class="info-row">📞 ☎ 0985-23-5301 | ⏰ 11:00~21:00 (LO 19:50)</div>
       <div class="info-row">🅿️ <strong>전용 주차장 35대</strong> + 패밀리 좌석 + 키즈체어 OK</div>
       <div class="info-row">⭐ 본점과 동일한 본가 레시피·메뉴 + 본점보다 한산 → 31개월 가족 정답</div>
@@ -806,7 +905,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
       <div class="map-links"><a class="map-link" href="https://www.google.com/maps?q=31.5873,130.5553" target="_blank" rel="noopener">📍 지도</a><a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=31.5873,130.5553" target="_blank" rel="noopener">🧭 네비</a></div>
     </div>
     <div class="summary-card" style="border-left-color: var(--accent);">
-      <h4>🍜 Ajimori 아지모리</h4>
+      <h4>🍜 Ajimori 아지모리 <span class="critical-badge">CRITICAL</span></h4>
       <span class="food-tag">Original Black Pork Shabu-shabu 흑돼지 샤브샤브 원조</span>
       <div class="info-row">📅 DAY5 저녁 | 📍 13-21 Sennichi-cho, Kagoshima</div>
       <div class="info-row">📞 099-224-7634 | ⚠️ 2주 전 예약 필수</div>
@@ -828,28 +927,330 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
       <h4>🗺️ 전체 이동 경로</h4>
       <div class="info-row">📍 미야자키 공항 도착 → 미야자키 시나가와 지역 → 가고시마 시 → 다시 미야자키로 복귀 → 미야자키 공항 출발</div>
       <div class="info-row">🚗 렌터카 총 주행거리: 약 600km</div>
-      <div class="info-row">🏨 숙박지: 피닉스 시가이아 리조트(3박, 北) → 시로야마 호텔 가고시마(3박) → <strong>ANA Holiday Inn Aoshima(1박, 南)</strong></div>
+      <div class="info-row">🏨 숙박지: 피닉스 시가이아 리조트(3박, 북부) → 시로야마 호텔 가고시마(3박) → <strong>ANA Holiday Inn Aoshima(1박, 남부)</strong></div>
       <div class="tip-box">
         <div class="tip-title">💡 이동 패턴 (v7 — 호텔 변경 반영)</div>
         DAY1: 미야자키 도착 → 시가이아 직행 → 호텔 식당 저녁<br>
         DAY2: Phoenix Zoo (오전 단축) → 점심 → <strong>리조트 낮잠 (13~15시)</strong> → Aoshima 신사·해변<br>
-        DAY3: Sun Messe Nichinan → Marine Viewer Nango (반잠수함) → <strong>리조트 복귀 낮잠</strong> → 17:30 早 Ogura 세가시라점<br>
-        DAY4: 미야자키 → 가고시마 <strong>이동만</strong> (도중 都城 휴식 30분, 호텔 도착 후 휴식)<br>
+        DAY3: Sun Messe Nichinan → Marine Viewer Nango (반잠수함) → <strong>리조트 복귀 낮잠</strong> → 17:30 일찍 Ogura 세가시라점<br>
+        DAY4: 미야자키 → 가고시마 <strong>이동만</strong> (도중 Miyakonojo 휴식 30분, 호텔 도착 후 휴식)<br>
         DAY5: <strong>Hirakawa Zoo 09:00 오픈 코알라(오전!)</strong> → 시로야마 전망대 → 텐몬칸 저녁<br>
         DAY6: Sakurajima Ferry → 공룡공원 + 100m 족욕탕 → IO World Aquarium (1.5h 단축)<br>
         DAY7: 가고시마 → <strong>Hitotsuba Miyachiku 와규 런치</strong> → <strong>ANA Holiday Inn Aoshima</strong> 체크인 → 비치+온천 → 호텔 디너<br>
         DAY8: Aoshima 비치 산책 → 이온몰 점심+쇼핑 → 공항 → 귀국
       </div>
       <div class="tip-box" style="border-color:#e74c3c;background:#fdedec;">
-        <div class="tip-title" style="color:#e74c3c;">⚠️ 5월말 장마 주의 (梅雨入り 평년 5/30)</div>
-        DAY7~8 우천 가능성 ↑ → 우산·아이 우비·갈아입을 옷 多 준비. 자외선도 강하므로 모자·선크림 필수.
+        <div class="tip-title" style="color:#e74c3c;">⚠️ 5월말 장마 주의 (장마 시작 평년 5/30)</div>
+        DAY7~8 우천 가능성 ↑ → 우산·아이 우비·갈아입을 옷 많이 준비. 자외선도 강하므로 모자·선크림 필수.
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 🌦️ WEATHER FORECAST ===================== -->
+<div id="summary-weather" class="summary-section">
+  <div class="container">
+    <div class="summary-card" style="border-left-color:#3498db;">
+      <h4>🌦️ 5/24~5/31 일기예보 (장마 진입기 ⚠️)</h4>
+      <div class="info-row"><strong>핵심:</strong> 일본 기상청·기상협회 모두 <strong>규슈 남부 장마 시작 평년 5/30 부근</strong> 발표. <strong>여행 기간 전체가 장마 진입기와 정면 충돌</strong>. 8일 중 5~6일이 흐림~비. 통기성 옷+가벼운 방수재킷, 아이 우비·갈아입을 옷 많이 필수.</div>
+      <div class="info-row">📡 출발 3~4일 전(5/20~21) 최신 예보 재확인 권장</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#3498db;">
+      <h4>🌧️ 미야자키 (Miyazaki)</h4>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:8px;">
+        <thead><tr style="background:var(--bg-soft);">
+          <th style="padding:8px;border:1px solid var(--border);text-align:left;">날짜</th>
+          <th style="padding:8px;border:1px solid var(--border);">날씨</th>
+          <th style="padding:8px;border:1px solid var(--border);">최고/최저</th>
+          <th style="padding:8px;border:1px solid var(--border);">강수%</th>
+          <th style="padding:8px;border:1px solid var(--border);text-align:left;">비고</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/24 일</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️→🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">28/21℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">40~60%</td><td style="padding:6px;border:1px solid var(--border);">도착일</td></tr>
+          <tr style="background:#FFF4F2;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/25 월</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">26/22℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;color:#e74c3c;font-weight:600;">80%</td><td style="padding:6px;border:1px solid var(--border);">Aoshima 야외 차질 위험</td></tr>
+          <tr style="background:#FFF8E7;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/26 화</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">27/20℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">60%</td><td style="padding:6px;border:1px solid var(--border);"><strong>반잠수함 풍랑 주의</strong></td></tr>
+          <tr style="background:#FFF8E7;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/27 수</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️→☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">26/18℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">70%</td><td style="padding:6px;border:1px solid var(--border);">자동차 이동 (가시거리)</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/28 목</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">26/19℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">30~70%</td><td style="padding:6px;border:1px solid var(--border);">가고시마 일정</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/29 금</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">25/21℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">40~50%</td><td style="padding:6px;border:1px solid var(--border);">사쿠라지마 페리 OK</td></tr>
+          <tr style="background:#FFF4F2;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/30 토</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">25/19℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">50~60%</td><td style="padding:6px;border:1px solid var(--border);"><strong>평년 장마 시작</strong></td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/31 일</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️🌦️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">25/20℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">50%</td><td style="padding:6px;border:1px solid var(--border);">Aoshima 산책 가능</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#3498db;">
+      <h4>🌧️ 가고시마 (Kagoshima)</h4>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:8px;">
+        <thead><tr style="background:var(--bg-soft);">
+          <th style="padding:8px;border:1px solid var(--border);text-align:left;">날짜</th>
+          <th style="padding:8px;border:1px solid var(--border);">날씨</th>
+          <th style="padding:8px;border:1px solid var(--border);">최고/최저</th>
+          <th style="padding:8px;border:1px solid var(--border);">강수%</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#FFF4F2;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/24 일</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">27~28/22℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;color:#e74c3c;font-weight:600;">60~90%</td></tr>
+          <tr style="background:#FFF4F2;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/25 월</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">23~27/21℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;color:#e74c3c;font-weight:600;">80% (56mm)</td></tr>
+          <tr style="background:#FFF8E7;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/26 화</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️→☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">26~27/18℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">50~80%</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/27 수</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">26~29/17℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">40~50%</td></tr>
+          <tr style="background:#FFF8E7;"><td style="padding:6px;border:1px solid var(--border);">⚠️ 5/28 목</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">🌧️→☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">25~27/17℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">30~80%</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/29 금</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️🌧️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">23~25/16℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">50%</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/30 토</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">24/17℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">~50%</td></tr>
+          <tr><td style="padding:6px;border:1px solid var(--border);">5/31 일</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">☁️</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">24/17℃</td><td style="padding:6px;border:1px solid var(--border);text-align:center;">~50%</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#e74c3c;">
+      <h4>⚠️ 일정별 위험도</h4>
+      <div class="info-row"><strong>5/25 (월) Aoshima 신사·해변</strong> ⚠️ <strong>고위험</strong> — 양 도시 강수 60~80%. 실내 대체안 준비</div>
+      <div class="info-row"><strong>5/26 (화) Marine Viewer Nango 반잠수함</strong> ⚠️ <strong>해상 풍랑 주의</strong> — 당일 아침 결항 확인 필수 ☎ 0987-64-1211</div>
+      <div class="info-row"><strong>5/27 (수) 자동차 이동</strong> ⚠️ 비/시야 저하 가능</div>
+      <div class="info-row"><strong>5/28 (목) Hirakawa Zoo·시로야마</strong> — 가고시마 30~80% 변동. 흐림이면 진행</div>
+      <div class="info-row"><strong>5/29 (금) Sakurajima 페리</strong> — 강풍/풍랑 경보 시 결항. 페리 운항 정보 확인</div>
+      <div class="info-row"><strong>5/30~31 Aoshima 해변</strong> — 평년 장마 시작 시점, 짧은 맑은 시간대 노릴 것</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#3498db;">
+      <h4>📡 실시간 예보 링크</h4>
+      <div class="info-row">🔗 <a href="https://tenki.jp/forecast/9/48/8710/45201/10days.html" target="_blank">tenki.jp 미야자키 10일 예보</a></div>
+      <div class="info-row">🔗 <a href="https://tenki.jp/forecast/9/49/8810/46201/10days.html" target="_blank">tenki.jp 가고시마 10일 예보</a></div>
+      <div class="info-row">🔗 <a href="https://www.jma.go.jp/bosai/forecast/#area_type=class20s&area_code=4530100" target="_blank">JMA 미야자키 (기상청)</a></div>
+      <div class="info-row">🔗 <a href="https://www.jma.go.jp/bosai/forecast/#area_type=class20s&area_code=4630100" target="_blank">JMA 가고시마 (기상청)</a></div>
+      <div class="info-row">🔗 <a href="https://www.data.jma.go.jp/cpd/baiu/sokuhou_baiu.html" target="_blank">JMA 장마 시작 속보 (Tsuyu-iri Sokuho)</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 🌧️ PLAN B (RAINY) ===================== -->
+<div id="summary-planb" class="summary-section">
+  <div class="container">
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>🌧️ 우천 시 플랜B — 핵심 의사결정</h4>
+      <div class="info-row">🚨 <strong>반잠수함(DAY3)·페리(DAY6)</strong>: 당일 아침 운항 확인 필수 (풍랑주의보 시 결항)</div>
+      <div class="info-row">🛁 <strong>시가이아 호텔 실내 온천 (Shosenkyu)</strong>: 비올 때 최고 카드 — 매일 활용 가능</div>
+      <div class="info-row">🎯 <strong>Round 1 엔터테인먼트</strong>: 31개월 준혁이도 UFO캐처·미니볼링 OK, 미야자키 우천 플랜B 최강</div>
+      <div class="info-row">🐬 <strong>IO World · 메이지 유신 박물관 (Ishin Furusato-kan)</strong>: 가고시마 우천 시 종일 가능 양대 실내 시설</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY1 (5/24 일) — 도착 → 호텔</h4>
+      <div class="info-row"><strong>플랜A:</strong> 공항→시가이아 체크인→호텔식당</div>
+      <div class="info-row"><strong>플랜B:</strong> 동일. 비 와도 영향 적음. 시가이아 도착 후 <strong>호텔 실내 온천 (Shosenkyu)</strong> + 로비 라운지 휴식. 이온몰 미야자키 들러 우산·우비 추가 구매.</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY2 (5/25 월) — Phoenix Zoo + Aoshima ⚠️ 고위험</h4>
+      <div class="info-row"><strong>플랜A:</strong> Phoenix Zoo (오전 단축) → Aoshima 신사·해변</div>
+      <div class="info-row"><strong>플랜B:</strong> ① <strong>미야자키 과학센터(플라네타리움)</strong> — 준혁이 연령 OK ② <strong>이온몰 미야자키</strong> 키즈존·푸드코트 ③ <strong>시가이아 실내 온천</strong> 복귀. Aoshima 신사만 짧게 우산 방문 가능(비 와도 운치 ↑).</div>
+      <div class="info-row">🔗 <a href="https://www.cosmoland.jp/" target="_blank">미야자키 과학센터</a> | <a href="https://miyazaki-aeonmall.com/" target="_blank">이온몰 미야자키</a></div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY3 (5/26 화) — Sun Messe + 반잠수함 ⚠️</h4>
+      <div class="info-row"><strong>플랜A:</strong> Sun Messe Nichinan → Marine Viewer Nango 반잠수함 → Hitotsuba 와규</div>
+      <div class="info-row"><strong>플랜B (반잠수함 결항 시):</strong> ① <strong>미야자키 현립 종합박물관</strong>(공룡·민속, 무료) ② <strong>Round 1 미야자키</strong>(5층, 볼링·아케이드·UFO캐처, 가족 종일 OK) ③ 저녁 Hitotsuba 와규는 그대로 진행 🥩</div>
+      <div class="info-row">🔗 <a href="https://www.miyazaki-archive.jp/museum/" target="_blank">미야자키 현립 종합박물관</a> | <a href="https://en-miyazaki.com/sightseeing/miyazaki-by-rain-round-1-entertainment-center/" target="_blank">Round 1 미야자키 가이드</a></div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY4 (5/27 수) — 미야자키 → 가고시마 이동</h4>
+      <div class="info-row"><strong>플랜A:</strong> 렌터카 이동 2.5h, Miyakonojo 휴식</div>
+      <div class="info-row"><strong>플랜B:</strong> 동일. 우천 시 <strong>에비노 고원·기리시마 신사 스킵</strong> → <strong>기리시마 아트의 숲(실내 미술관)</strong> 또는 <strong>묘켄 온천 족욕</strong>으로 대체.</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY5 (5/28 목) — Hirakawa Zoo + 텐몬칸</h4>
+      <div class="info-row"><strong>플랜A:</strong> Hirakawa Zoo 09:00 (코알라) → 시로야마 전망대 → 텐몬칸</div>
+      <div class="info-row"><strong>플랜B:</strong> ① Hirakawa Zoo 비올 때 <strong>코알라관·실내사육관만 1.5h 짧게</strong> ② <strong>메이지 유신 박물관 (Ishin Furusato-kan)</strong> 인터랙티브 영상 ③ <strong>아뮤플라자 가고시마</strong> 쇼핑+관람차(운행 시) ④ 텐몬칸 아케이드(지붕 있음) 흑돼지 샤브샤브.</div>
+      <div class="info-row">🔗 <a href="https://ishinfurusatokan.info/" target="_blank">Ishin Furusato-kan</a> | <a href="https://www.amu-kagoshima.com/" target="_blank">아뮤플라자 가고시마</a></div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY6 (5/29 금) — Sakurajima + IO World</h4>
+      <div class="info-row"><strong>플랜A:</strong> 페리 → 공룡공원 → 100m 족욕탕 → IO World</div>
+      <div class="info-row"><strong>플랜B:</strong> Sakurajima 페리는 <strong>태풍급 아니면 정상 운항</strong>(24h, 15분 간격). 단 공룡공원 스킵 → ① <strong>사쿠라지마 비지터센터</strong>(실내 화산 전시) ② <strong>요간나기사 노천온천</strong>(지붕형, 비 와도 OK, 바다뷰) ③ 페리 복귀 후 <strong>IO World 수족관</strong> 종일 체류(돌고래쇼 실내).</div>
+      <div class="info-row">🔗 <a href="https://www.sakurajima.gr.jp/svc/" target="_blank">사쿠라지마 비지터센터</a></div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY7 (5/30 토) — 가고시마 → ANA Aoshima ⚠️</h4>
+      <div class="info-row"><strong>플랜A:</strong> 이동 → Hitotsuba 와규 런치 → ANA 체크인 → 비치+온천 → Ogura 디너</div>
+      <div class="info-row"><strong>플랜B:</strong> 이동 중 <strong>MEGA 돈키호테 가고시마</strong> 쇼핑·기념품. ANA Aoshima 도착 후 비치 산책 대신 <strong>호텔 실내 온천</strong> 충분히 활용 + 객실 휴식. 저녁 Ogura는 그대로 진행.</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>📅 DAY8 (5/31 일) — Aoshima → 공항 → 귀국</h4>
+      <div class="info-row"><strong>플랜A:</strong> Aoshima 비치 산책 → 이온몰 점심+쇼핑 → 공항</div>
+      <div class="info-row"><strong>플랜B:</strong> 비치 스킵, <strong>이온몰 미야자키</strong>(실내 키즈존·푸드코트, 공항 가는 길) 마지막 쇼핑·점심 → 공항 라운지.</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#9b59b6;">
+      <h4>🔗 참고 자료</h4>
+      <div class="info-row">🔗 <a href="https://www.kanko-miyazaki.jp/en/highlights/rain" target="_blank">Visit Miyazaki - 비올 때 명소</a></div>
+      <div class="info-row">🔗 <a href="https://www.tripadvisor.com/Attractions-g298211-Activities-zft11295-Kagoshima_Kagoshima_Prefecture_Kyushu.html" target="_blank">Tripadvisor - 가고시마 실내 명소</a></div>
+      <div class="info-row">🔗 <a href="https://en.seagaia.co.jp/activity/" target="_blank">Phoenix Seagaia Resort 액티비티</a></div>
+      <div class="info-row">🔗 <a href="https://www.kagoshima-kankou.com/for/attractions/52101" target="_blank">사쿠라지마 페리 24시간 운항</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 🥃 WHISKY / SAKE ===================== -->
+<div id="summary-whisky" class="summary-section">
+  <div class="container">
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🥃 위스키·사케·소주 매장 추천 (가고시마 + 미야자키)</h4>
+      <div class="info-row"><strong>핵심:</strong> 한국 대비 1/2~1/3 가격! <strong>외국인 면세(5,000엔↑)</strong> 가능 매장 우선. 가고시마는 <strong>고구마 소주(Imo Shochu) 본고장</strong> — Mori Izo·Mao·Murao (3M) 한정.</div>
+      <div class="info-row">⏰ <strong>오픈 직후</strong>(특히 Yamazaki·Hibiki·Hakushu 한정판 입고일) 방문이 정가 확보 핵심</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#27AE60;">
+      <h4>⭐ TOP1: 돈키호테 가고시마 텐몬칸점 (Don Quijote Kagoshima Tenmonkan)</h4>
+      <span class="food-tag">DAY4~6 가고시마 거점 (텐몬칸 도보 2분)</span>
+      <div class="info-row">📍 14-3 Higashi-Sengoku-cho, Kagoshima (텐몬칸도리역 출구2 도보 2분)</div>
+      <div class="info-row">⏰ 통상 24시간 / 면세카운터 운영 (외국인 5,000엔↑)</div>
+      <div class="info-row">✨ 위스키·사케·소주 원스톱 + 면세. 산토리 Kaku(카쿠)·Chita(치타)·블랙닛카 거의 상시. Yamazaki/Hibiki/Hakushu 입고는 운빨</div>
+      <div class="info-row">💰 한국 대비 1/2~1/3 가격</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.google.com/maps?q=Don+Quijote+Kagoshima+Tenmonkan" target="_blank" rel="noopener">📍 지도</a>
+        <a class="map-link" href="https://www.donki.com/store/shop_detail.php?shop_id=355" target="_blank" rel="noopener">🌐 공식</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#27AE60;">
+      <h4>⭐ TOP2: MEGA 돈키호테 미야자키 타치바나도리점</h4>
+      <span class="food-tag">DAY1·7·8 미야자키 시내</span>
+      <div class="info-row">📍 3 Tachibana-dori Higashi, Miyazaki (미야자키 시내)</div>
+      <div class="info-row">⏰ 10:00~20:00 / 면세 가능</div>
+      <div class="info-row">✨ 일반 돈키보다 식품·주류 라인업 풍부. <strong>사케·소주 가고시마/미야자키 로컬 셀렉션</strong> 강함</div>
+      <div class="info-row">📌 DAY7~8 동선과 자연스럽게 결합 (이온몰 가기 전 들르기 좋음)</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.google.com/maps?q=MEGA+Don+Quijote+Miyazaki+Tachibana-dori" target="_blank" rel="noopener">📍 지도</a>
+        <a class="map-link" href="https://www.donki.com/store/shop_detail.php?shop_id=619" target="_blank" rel="noopener">🌐 공식</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🥃 리카마운틴 미야자키 츄오도리점 (Liquor Mountain)</h4>
+      <span class="food-tag">위스키 전문 라인업 최강</span>
+      <div class="info-row">📍 7-22 Chuo-dori, Miyazaki (미야자키 시내)</div>
+      <div class="info-row">⏰ <strong>17:00~익일 01:00 / 일요일 휴무</strong> ← 영업시간 주의!</div>
+      <div class="info-row">✨ Yamazaki/Hibiki/Hakushu <strong>정가 입고 가능성 가장 높음</strong>. 추첨/예약 게시 (월 1~2회)</div>
+      <div class="info-row">📌 DAY7(토) 저녁 또는 DAY1 18:30 픽업 후 잠깐 방문 가능</div>
+      <div class="map-links">
+        <a class="map-link" href="https://www.likaman.co.jp/en/shop/miyazaki/miyazaki-shi/12630.html" target="_blank" rel="noopener">🌐 공식</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🍶 우에노마치 상점 (Uenomachi Shoten)</h4>
+      <span class="food-tag">가고시마 노포 소주 전문</span>
+      <div class="info-row">📍 가고시마 시내</div>
+      <div class="info-row">✨ <strong>Mori Izo · Mao · Isami</strong> 등 프리미엄 고구마 소주 + 일부 재패니즈 위스키</div>
+      <div class="info-row">📌 <strong>3M (Mori Izo · Mao · Murao)는 추첨/소량</strong> — 가고시마 한정 선물용 최고</div>
+      <div class="map-links">
+        <a class="map-link" href="https://uenomachisyouten.com/" target="_blank" rel="noopener">🌐 공식</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🍶 소주 사사쿠라 (Shochu Sasakura, 텐몬칸)</h4>
+      <span class="food-tag">소주 500종 시음+구입 (이자카야형)</span>
+      <div class="info-row">📍 텐몬칸 도리</div>
+      <div class="info-row">✨ 약 500종 소주 <strong>시음·구입 가능</strong>. 가고시마 한정 소주 셀렉션</div>
+      <div class="info-row">📌 DAY5 텐몬칸 저녁 일정과 자연스럽게 결합</div>
+      <div class="map-links">
+        <a class="map-link" href="https://tabelog.com/en/kagoshima/A4601/A460101/46000160/" target="_blank" rel="noopener">🌐 Tabelog</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🛒 이온몰 미야자키 (AEON Mall Miyazaki)</h4>
+      <span class="food-tag">DAY8 출국 동선 — 일괄 면세수속</span>
+      <div class="info-row">📍 미야자키 시내, 공항 가는 길</div>
+      <div class="info-row">⏰ 10:00~20:00 / 1F 인포에서 일괄 면세수속</div>
+      <div class="info-row">✨ <strong>인팩트원플러스 (Impact One Plus)</strong>가 주류 전문 코너</div>
+      <div class="info-row">📌 DAY8 점심+쇼핑 일정과 완벽 결합 (이미 계획됨)</div>
+      <div class="map-links">
+        <a class="map-link" href="https://miyazaki-aeonmall.com/sale/lists/taxfree" target="_blank" rel="noopener">🌐 면세 안내</a>
+      </div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>✈️ 미야자키 공항 면세점</h4>
+      <span class="food-tag">DAY8 출국 — 마지막 보험용</span>
+      <div class="info-row">✨ Yamazaki/Hibiki/Hakushu 한정 입고 있지만 재고 매우 유동적</div>
+      <div class="info-row">⚠️ 지방공항이라 큰 기대 X — <strong>돈키/리카마운틴에서 못 산 경우 마지막 보험</strong></div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#e74c3c;">
+      <h4>💰 한국 대비 가성비 TOP 픽</h4>
+      <div class="info-row">🥇 <strong>Hibiki BLOSSOM HARMONY / JAPANESE HARMONY</strong> — 한국 30~40만원 → 일본 정가 5,500~12,000엔</div>
+      <div class="info-row">🥇 <strong>Yamazaki NV / Hakushu NV</strong> — 한국 25~35만원 → 일본 정가 4,500엔 (입고 시 야마야/리카마운틴 추첨)</div>
+      <div class="info-row">🥈 <strong>산토리 Chita / 닛카 코페이 그레인</strong> — 한국 12만원 → 일본 4,000~5,000엔, 상시 재고</div>
+      <div class="info-row">🥉 <strong>블랙닛카 딥블렌드 / 후로무더배럴</strong> — 한국 5만원 → 일본 1,500~2,500엔, <strong>가성비 최강 상시 매대</strong></div>
+      <div class="info-row">🍶 <strong>고구마 소주(Imo Shochu) 3M (Mori Izo · Mao · Murao)</strong> — 가고시마 한정, 우에노마치 등 추첨/소량</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#3498db;">
+      <h4>🗺️ 동선 추천</h4>
+      <div class="info-row"><strong>DAY4-6 가고시마</strong>: 돈키호테 텐몬칸점 (상시) + 우에노마치 상점 (고구마 소주 선물) + Shochu Sasakura (DAY5 텐몬칸 저녁)</div>
+      <div class="info-row"><strong>DAY7 미야자키 복귀</strong>: 리카마운틴 미야자키 츄오도리점 (17시 이후, 토요일 영업!) — Yamazaki/Hibiki 입고 노리기</div>
+      <div class="info-row"><strong>DAY8 출국</strong>: MEGA 돈키 타치바나도리 → 이온몰 미야자키(면세 일괄) → 공항 면세점 (보조)</div>
+      <div class="info-row">📋 <strong>구매 시 여권 지참 필수</strong> (면세 처리)</div>
+    </div>
+
+    <div class="summary-card" style="border-left-color:#a04e32;">
+      <h4>🎟️ Yamazaki/Hibiki 한정판 추첨 정보</h4>
+      <div class="info-row"><strong>Sake no Yamaya 야마야카드</strong> (연회비 무료, 외국인 앱가입 OK) — 한정 추첨 판매. 가고시마/미야자키 직영점 적어 현장 추첨 한정적</div>
+      <div class="info-row"><strong>리카마운틴 미야자키 츄오도리점</strong> — 입고 시 매장 추첨/예약 게시 (월 1~2회)</div>
+      <div class="info-row"><strong>돈키/이온</strong> — 추첨 X, 입고분 선착순 → 오픈 직후 방문 시 운빨 정가 가능</div>
+      <div class="info-row">🔗 <a href="https://nyuka-now.com/archives/834" target="_blank">Yamazaki·Hibiki·Hakushu 입고/추첨 정보 2026</a></div>
     </div>
   </div>
 </div>
 
 <div id="summary-checklist" class="summary-section">
   <div class="container">
+
+    <!-- =================== 🚨 CRITICAL — 출발 전 직접 확인 필수 =================== -->
+    <div class="critical-card">
+      <h4>🌋 #1. 사쿠라지마 화산 분화경계 레벨 3 — DAY6 (5/29) 일정 직접 결정</h4>
+      <div class="info-row"><strong>현황:</strong> 2026.5.8 미나미다케 화구 <strong>3,500m 분연주 분출</strong> → JMA 분화경계레벨 3 유지 중. 화구 반경 2km 진입 금지, 화산탄 1,000~1,300m 비산.</div>
+      <div class="info-row"><strong>직접 확인 시점:</strong> 출발 전일(5/23) + DAY5 저녁(5/28) + DAY6 아침(5/29)</div>
+      <div class="info-row"><strong>판단 기준:</strong>
+        <br>• <strong>레벨 3 유지</strong> → 차량 미동승 페리 왕복 관광(1인 250엔) → IO World 시간 확장 → Sengan-en에서 원경 감상
+        <br>• <strong>레벨 4 이상</strong> → 사쿠라지마 완전 SKIP → IO World 종일 + Sengan-en 또는 Amuran 관람차
+        <br>• 차량 페리 정확 요금: <strong>편도 2,350엔</strong> (왕복 약 4,700엔)
+      </div>
+      <a class="check-action" href="https://emergency-weather.yahoo.co.jp/weather/en/volcano/506/" target="_blank">📡 Yahoo 사쿠라지마 화산정보 확인</a>
+      <a class="check-action" href="https://www.data.jma.go.jp/svd/vois/data/tokyo/STOCK/activity_info/506_index.html" target="_blank" style="margin-left:6px;">📡 JMA 공식</a>
+    </div>
+
+    <div class="critical-card">
+      <h4>🍗 #2. Ogura 세가시라점 (DAY7 5/30 토 18:00 디너) 영업 확인</h4>
+      <div class="info-row"><strong>현황:</strong> 「오구라」 체인은 본점·세가시라점 모두 <strong>점심 영업 중심 ~14:30</strong>일 가능성. <strong>18:00 디너 영업 미확인.</strong></div>
+      <div class="info-row"><strong>본점 정기휴무:</strong> 화요일 + 1·3째 수요일 — 세가시라점도 유사 가능성 ↑</div>
+      <div class="info-row"><strong>직접 확인 시점:</strong> <strong>지금 즉시</strong> (5/30 토요일 디너 가능 여부 확정 필요)</div>
+      <div class="info-row"><strong>전화 한국어 안 통할 가능성</strong> → 호텔 컨시어지 통한 확인 가능. 디너 불가 시 대안: <strong>直ちゃん(치킨난반 원조, 油津)</strong> 또는 Ogura 본점/Sadowara점</div>
+      <a class="check-action" href="tel:+81985235301">📞 ☎ 0985-23-5301 전화</a>
+      <a class="check-action" href="https://www.ogurachain.com/tenpo.html" target="_blank" style="margin-left:6px;">🌐 Ogura 체인 점포 목록</a>
+    </div>
+
+    <div class="critical-card">
+      <h4>🥩 #3. Ajimori (DAY6 5/29 금 저녁) 2주 전 예약 — 마감 임박</h4>
+      <div class="info-row"><strong>현황:</strong> 가고시마 <strong>흑돼지 샤브샤브 원조점</strong>. 정기휴무 수요일(DAY6는 금요일 OK), 디너 17:00~21:30 (L.O.20:45, 입장마감 20:00). <strong>예약 전쟁 심함.</strong></div>
+      <div class="info-row"><strong>오늘 날짜 2026-05-15 기준:</strong> 5/29까지 D-14 — <strong>2주 전 예약 마감 임박</strong> ⚠️</div>
+      <div class="info-row"><strong>직접 확인 시점:</strong> <strong>오늘~내일 안에</strong></div>
+      <div class="info-row"><strong>예약 방법:</strong> 한국어 통역 불가 → <strong>시로야마 호텔 컨시어지(099-224-2211)</strong> 통한 예약 권장. 다다미 개인실 + 31개월 아이 동반 명시.</div>
+      <a class="check-action" href="tel:+81992247634">📞 ☎ Ajimori 099-224-7634</a>
+      <a class="check-action" href="https://adimori.com/dinnermenu.html" target="_blank" style="margin-left:6px;">🌐 디너 메뉴</a>
+    </div>
+
     <div class="summary-card">
       <h4>✅ 출발 전 확인사항</h4>
       <div class="info-row">☐ 여권, 항공권 확인</div>
@@ -868,7 +1269,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⭐ <strong>Hitotsuba Miyachiku 데판야키 ☎ 0985-28-2914</strong> — <strong>DAY3(5/26 화) 17:30 디너</strong> 예약 (1~2주 전 필수!) <a href="https://r.gnavi.co.jp/mgtt6rgk0000/" target="_blank">[Gnavi]</a> [스왑됨]</div>
       <div class="info-row">☐ ⭐ <strong>Ogura 세가시라점 ☎ 0985-23-5301</strong> 사전 좌석 확인 (<strong>DAY7(5/30 토) 18:00</strong> 도착 예정, 35대 주차) [스왑됨]</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ 🏨 <strong>ANA Holiday Inn Resort Miyazaki by IHG</strong> 예약 확인 (5/30 1박, 1-16-1 Aoshima)</div>
-      <div class="info-row" style="color:#7F8C8D;">☐ 백업: Ogura 본점 0985-22-2296 / 佐土原店 (<a href="https://www.ogurachain.com/tenpo.html" target="_blank">공식</a>)</div>
+      <div class="info-row" style="color:#7F8C8D;">☐ 백업: Ogura 본점 0985-22-2296 / Sadowara점 (<a href="https://www.ogurachain.com/tenpo.html" target="_blank">공식</a>)</div>
       <div class="info-row">☐ 🌋 사쿠라지마 화산 경보 레벨 체크 (레벨3↑ 시 구역 통제)</div>
       <div class="info-row">☐ 🧴 사쿠라지마 족욕탕 — 타월 챙기기</div>
       <div class="info-row">☐ 렌터카 가고시마현 타현 이동 가능 여부 사전 확인 필수!</div>
@@ -877,9 +1278,15 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
       <div class="info-row">☐ 📞 Kurofukuta 예약 ☎ 099-222-5625</div>
       <div class="info-row">☐ 📞 Ajimori 예약 (<strong>2주 전 필수!</strong>) ☎ 099-224-7634</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⚠️ 5월말 장마 시작 (평년 5/30) → 우비, 우산, 갈아입을 옷 준비</div>
+      <div class="info-row" style="color:#3498db;font-weight:600;">☐ 🌦️ 출발 3~4일 전(5/20~21) <a href="https://tenki.jp/forecast/9/48/8710/45201/10days.html" target="_blank">tenki.jp 미야자키</a> / <a href="https://tenki.jp/forecast/9/49/8810/46201/10days.html" target="_blank">가고시마</a> 최신 예보 확인</div>
+      <div class="info-row" style="color:#3498db;font-weight:600;">☐ 🌦️ DAY3(5/26) 아침 Marine Viewer Nango 반잠수함 운항 확인 ☎ 0987-64-1211 (풍랑 시 결항)</div>
+      <div class="info-row" style="color:#3498db;font-weight:600;">☐ 🌦️ DAY6(5/29) 아침 Sakurajima 페리 운항 확인 (24h 운항이지만 풍랑 경보 시 결항)</div>
+      <div class="info-row" style="color:#a04e32;font-weight:600;">☐ 🥃 여권 지참 (위스키·사케 면세 5,000엔↑ 필수)</div>
+      <div class="info-row" style="color:#a04e32;font-weight:600;">☐ 🥃 리카마운틴 미야자키점 영업시간 확인 (17:00~익일01:00, 일요일 휴무)</div>
+      <div class="info-row" style="color:#a04e32;font-weight:600;">☐ 🥃 야마야카드 앱 사전 가입 (Yamazaki·Hibiki 추첨 응모용, 무료)</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⚠️ Miyakonojo IC 휴식 인지 (DAY4·DAY7 도중)</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⚠️ Hirakawa Zoo는 09:00 오픈 즉시 입장 (코알라 오후엔 자기 때문)</div>
-      <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⚠️ Ogura Honten은 17:30 早 입장 (1시간+ 대기 회피)</div>
+      <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ ⚠️ Ogura Honten은 17:30 일찍 입장 (1시간+ 대기 회피)</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ 💴 Sakurajima 페리 차량 동승료 약 1,950엔 현금 준비</div>
       <div class="info-row" style="color:#e74c3c;font-weight:600;">☐ 🧴 Sakurajima 100m 족욕탕 — 타월 챙기기</div>
     </div>
@@ -1209,7 +1616,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">평점</div>
                 <div class="info-value">⭐ Tabelog 3.8 / Google 4.0 / TripAdvisor 4.0 — 아이동반 평가 4.6</div>
                 <div class="info-label">예약</div>
-                <div class="info-value">📞 전화 예약 or <a href="https://www.hotpepper.jp/strJ000113877/" target="_blank">Hot Pepper 온라인 예약</a> — <strong>좌식방(座敷) 요청</strong></div>
+                <div class="info-value">📞 전화 예약 or <a href="https://www.hotpepper.jp/strJ000113877/" target="_blank">Hot Pepper 온라인 예약</a> — <strong>좌식방(Zashiki) 요청</strong></div>
                 <div class="info-label">좌석</div>
                 <div class="info-value">카운터, 테이블, 다다미, 개인실, 로프트 — 가족 좌석 다양</div>
                 <div class="info-label">예산</div>
@@ -1232,7 +1639,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
     <div id="day3" class="day-panel">
       <div class="day-header">
         <h2>DAY 3 (5/26 화)</h2>
-        <div class="day-summary">Nichinan Coast (반잠수함) → 리조트 낮잠 → 早 Ogura</div>
+        <div class="day-summary">Nichinan Coast (반잠수함) → 리조트 낮잠 → 일찍 Ogura</div>
       </div>
       <div class="timeline">
         <div class="timeline-item">
@@ -1276,7 +1683,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">주소</div>
                 <div class="info-value"><span class="copy-wrap"><span>2650 Miyaura, Nichinan, Miyazaki 887-0101</span><button class="copy-btn" onclick="copyText('2650 Miyaura, Nichinan, Miyazaki 887-0101',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>サンメッセ日南</span><button class="copy-btn" onclick="copyText('サンメッセ日南',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>Sun Messe Nichinan</span><button class="copy-btn" onclick="copyText('Sun Messe Nichinan',this,event)">복사</button></span></div>
                 <div class="info-label">영업시간</div>
                 <div class="info-value">09:30~17:00</div>
                 <div class="info-label">입장료</div>
@@ -1286,7 +1693,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               </div>
               <div class="tip-box">
                 <div class="tip-title">👶 준혁이 TIP</div>
-                7개 모아이상 + 태평양 절경! 사진 포토존 多 📸 작은 언덕 위, 평지 산책 OK
+                7개 모아이상 + 태평양 절경! 사진 포토존 다수 📸 작은 언덕 위, 평지 산책 OK
               </div>
               <iframe class="map-embed" src="https://www.google.com/maps?q=31.6133,131.4744&output=embed" loading="lazy"></iframe>
               <div class="map-links">
@@ -1342,7 +1749,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">전화</div>
                 <div class="info-value"><span class="copy-wrap"><span>0987-64-4288</span><button class="copy-btn" onclick="copyText('0987-64-4288',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>マリンビューワーなんごう</span><button class="copy-btn" onclick="copyText('マリンビューワーなんごう',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>Marine Viewer Nango</span><button class="copy-btn" onclick="copyText('Marine Viewer Nango',this,event)">복사</button></span></div>
                 <div class="info-label">요금</div>
                 <div class="info-value">어른 1,500엔 / 소아(4세~) 750엔 / 3세 이하 무료</div>
                 <div class="info-label">주차</div>
@@ -1355,7 +1762,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               </div>
               <div class="tip-box">
                 <div class="tip-title">👶 준혁이 TIP</div>
-                반잠수함 타고 바닷속 물고기 관찰 🐠 약 45분 코스. 31개월 준혁이에게 안전하고 재미있는 체험! ⚠️ 사전 예약 필수! Cape Toi 근처 戸浦港(Tokuura Port)에서 출항.
+                반잠수함 타고 바닷속 물고기 관찰 🐠 약 45분 코스. 31개월 준혁이에게 안전하고 재미있는 체험! ⚠️ 사전 예약 필수! Cape Toi 근처 Tokuura Port에서 출항.
               </div>
             </div>
           </div>
@@ -1375,13 +1782,13 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
             <div class="card-body">
               <div class="info-grid">
                 <div class="info-label">결정</div>
-                <div class="info-value">飫肥城下町 (Obi Castle Town)는 역사·건축 위주로 31개월에게 흥미 X → 스킵</div>
+                <div class="info-value">Obi Castle Town는 역사·건축 위주로 31개월에게 흥미 X → 스킵</div>
                 <div class="info-label">대신</div>
                 <div class="info-value">차내 1시간 10분 낮잠 + 객실/풀에서 1시간 20분 휴식</div>
               </div>
               <div class="tip-box">
                 <div class="tip-title">⭐ 31개월 아이 우선 결정</div>
-                "큐슈의 작은 교토" 飫肥는 어른 관광지. 모아이상+반잠수함 후 누적 피로 + 차량 부담 + 한자 간판 산책은 준혁이에게 의미 X. <strong>리조트 복귀해 푹 쉬고 17:30 早 입장으로 Ogura 줄 회피</strong>가 정답.
+                "큐슈의 작은 교토" Obi는 어른 관광지. 모아이상+반잠수함 후 누적 피로 + 차량 부담 + 한자 간판 산책은 준혁이에게 의미 X. <strong>리조트 복귀해 푹 쉬고 17:30 일찍 입장으로 Ogura 줄 회피</strong>가 정답.
               </div>
             </div>
           </div>
@@ -1416,18 +1823,18 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               <div class="card-title-wrap">
                 <div class="card-time">17:30~19:30</div>
                 <div class="card-name">⭐ 저녁 식사 — Hitotsuba Miyachiku 데판야키 (확정!)</div>
-                <div class="card-name-jp">鉄板焼ステーキ 一ッ葉ミヤチク — Miyazaki A5 Wagyu</div>
+                <div class="card-name-jp">Teppanyaki Steak Hitotsuba Miyachiku — Miyazaki A5 Wagyu</div>
               </div>
               <div class="card-toggle">▼</div>
             </div>
             <div class="card-body">
               <div class="info-grid">
                 <div class="info-label">선택 이유</div>
-                <div class="info-value">시가이아 리조트와 <strong>같은 동네(新別府町, 차량 5분)</strong> + 미야자키 A5 와규 데판야키 + 셰프 쇼 + 피아노 라이브 — DAY3 빡빡한 일정 마무리에 특별감 ↑</div>
+                <div class="info-value">시가이아 리조트와 <strong>같은 동네(Shinbeppu-cho, 차량 5분)</strong> + 미야자키 A5 와규 데판야키 + 셰프 쇼 + 피아노 라이브 — DAY3 빡빡한 일정 마무리에 특별감 ↑</div>
                 <div class="info-label">주소</div>
                 <div class="info-value"><span class="copy-wrap"><span>1401-255 Maehama, Shinbeppu-cho, Miyazaki 880-0834</span><button class="copy-btn" onclick="copyText('1401-255 Maehama, Shinbeppu-cho, Miyazaki 880-0834',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>一ッ葉ミヤチク</span><button class="copy-btn" onclick="copyText('一ッ葉ミヤチク',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>Hitotsuba Miyachiku</span><button class="copy-btn" onclick="copyText('Hitotsuba Miyachiku',this,event)">복사</button></span></div>
                 <div class="info-label">전화</div>
                 <div class="info-value"><span class="copy-wrap"><span>0985-28-2914</span><button class="copy-btn" onclick="copyText('0985-28-2914',this,event)">복사</button></span></div>
                 <div class="info-label">영업</div>
@@ -1439,7 +1846,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">분위기</div>
                 <div class="info-value">소나무 숲 속, 라이트업 + 피아노 라이브</div>
                 <div class="info-label">아이 동반</div>
-                <div class="info-value">⭐ 셰프 데판야키 쇼 = 31개월 흥미진진. 사이드 풍부 (사라다바). 가족 친화 평 多</div>
+                <div class="info-value">⭐ 셰프 데판야키 쇼 = 31개월 흥미진진. 사이드 풍부 (사라다바). 가족 친화 평 많음</div>
                 <div class="info-label">⚠️ 안전</div>
                 <div class="info-value">철판 고온 주의 → 준혁이 부모 무릎 쪽으로 좌석</div>
               </div>
@@ -1896,8 +2303,12 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
 
     <div id="day6" class="day-panel">
       <div class="day-header">
-        <h2>DAY 6 (5/29 금)</h2>
+        <h2>DAY 6 (5/29 금) <span class="critical-badge">CRITICAL 2건</span></h2>
         <div class="day-summary">Sakurajima 페리 + IO World 수족관 + Tenmonkan</div>
+        <div style="margin-top:10px;padding:10px 14px;background:rgba(220,38,38,0.15);border-left:4px solid #DC2626;border-radius:6px;font-size:0.85rem;line-height:1.5;">
+          🚨 <strong>CRITICAL #1:</strong> 사쿠라지마 화산 레벨 3 — 출발 전일/당일 아침 <a href="https://emergency-weather.yahoo.co.jp/weather/en/volcano/506/" target="_blank" style="color:#FEF3C7;text-decoration:underline;">JMA 확인</a> 후 진입 결정<br>
+          🚨 <strong>CRITICAL #3:</strong> 저녁 Ajimori 2주 전 예약 — 오늘~내일 시로야마 호텔 컨시어지(099-224-2211) 통해 확보
+        </div>
       </div>
       <div class="timeline">
         <div class="timeline-item">
@@ -2060,7 +2471,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">전화</div>
                 <div class="info-value"><span class="copy-wrap"><span>099-226-2233</span><button class="copy-btn" onclick="copyText('099-226-2233',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>いおワールドかごしま水族館</span><button class="copy-btn" onclick="copyText('いおワールドかごしま水족館',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>IO World Kagoshima Aquarium</span><button class="copy-btn" onclick="copyText('IO World Kagoshima Aquarium',this,event)">복사</button></span></div>
                 <div class="info-label">영업</div>
                 <div class="info-value">09:30~18:00 (입장 17:00까지)</div>
                 <div class="info-label">요금</div>
@@ -2186,8 +2597,11 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
 
     <div id="day7" class="day-panel">
       <div class="day-header">
-        <h2>DAY 7 (5/30 토)</h2>
+        <h2>DAY 7 (5/30 토) <span class="critical-badge">CRITICAL 1건</span></h2>
         <div class="day-summary">가고시마 → ANA Holiday Inn Aoshima → 비치+온천 → Ogura 세가시라점 디너</div>
+        <div style="margin-top:10px;padding:10px 14px;background:rgba(220,38,38,0.15);border-left:4px solid #DC2626;border-radius:6px;font-size:0.85rem;line-height:1.5;">
+          🚨 <strong>CRITICAL #2:</strong> Ogura 세가시라점 18:00 디너 영업 미확인 — <strong>지금 즉시</strong> <a href="tel:+81985235301" style="color:#FEF3C7;text-decoration:underline;font-weight:700;">☎ 0985-23-5301</a> 확인. 디너 불가 시 대안: 直ちゃん(치킨난반 원조) 또는 Ogura 본점.
+        </div>
       </div>
       <div class="timeline">
         <div class="timeline-item" style="background:#fdedec;border-radius:12px;border-left:4px solid #e74c3c;">
@@ -2196,7 +2610,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               <div class="card-icon">⚠️</div>
               <div class="card-title-wrap">
                 <div class="card-time">사전 체크</div>
-                <div class="card-name">5월말 장마 주의 (梅雨入り 평년 5/30)</div>
+                <div class="card-name">5월말 장마 주의 (장마 시작 평년 5/30)</div>
                 <div class="card-name-jp">Rainy Season Begins — Pack Rain Gear</div>
               </div>
               <div class="card-toggle">▼</div>
@@ -2205,7 +2619,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               <div class="tip-box">
                 <div class="tip-title">⚠️ 5월말 우천 대비</div>
                 미야자키 평년 장마 시작이 5/30. DAY7~8 우천 가능성 ↑<br>
-                <strong>준비물</strong>: 우산, 아이 우비, 갈아입을 옷 多, 자외선 차단제 (비 와도 자외선 강함), 모자<br>
+                <strong>준비물</strong>: 우산, 아이 우비, 갈아입을 옷 많이, 자외선 차단제 (비 와도 자외선 강함), 모자<br>
                 일정 변경 가능성: 비오면 해변 → 이온몰 키즈존으로 이동
               </div>
             </div>
@@ -2288,7 +2702,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               <div class="card-title-wrap">
                 <div class="card-time">14:30~15:00</div>
                 <div class="card-name">⭐ ANA Holiday Inn Resort Miyazaki 체크인 (신규 호텔!)</div>
-                <div class="card-name-jp">ANAホリデイ・イン リゾート宮崎 by IHG (Aoshima 해변)</div>
+                <div class="card-name-jp">ANA Holiday Inn Resort Miyazaki by IHG (Aoshima Beach)</div>
               </div>
               <div class="card-toggle">▼</div>
             </div>
@@ -2297,7 +2711,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">주소</div>
                 <div class="info-value"><span class="copy-wrap"><span>1-16-1 Aoshima, Miyazaki 889-2162</span><button class="copy-btn" onclick="copyText('1-16-1 Aoshima, Miyazaki 889-2162',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>ANAホリデイ・イン リゾート宮崎</span><button class="copy-btn" onclick="copyText('ANAホリデイ・イン リゾート宮崎',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>ANA Holiday Inn Resort Miyazaki</span><button class="copy-btn" onclick="copyText('ANA Holiday Inn Resort Miyazaki',this,event)">복사</button></span></div>
                 <div class="info-label">공식</div>
                 <div class="info-value"><a href="https://www.anahirmiyazaki.com/" target="_blank">anahirmiyazaki.com</a> / <a href="https://www.ihg.com/holidayinnresorts/hotels/us/en/miyazaki/kmihi/hoteldetail" target="_blank">IHG 사이트</a></div>
                 <div class="info-label">체크인/아웃</div>
@@ -2360,7 +2774,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               <div class="card-title-wrap">
                 <div class="card-time">18:00~19:30</div>
                 <div class="card-name">⭐ 마지막 미야자키 저녁 — Ogura Segashira 오구라 세가시라점 (스왑!)</div>
-                <div class="card-name-jp">おぐら瀬頭店 — Original Chicken Nanban</div>
+                <div class="card-name-jp">Ogura Segashira-ten — Original Chicken Nanban</div>
               </div>
               <div class="card-toggle">▼</div>
             </div>
@@ -2371,7 +2785,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">주소</div>
                 <div class="info-value"><span class="copy-wrap"><span>2-2-23 Segashira, Miyazaki 880-0867</span><button class="copy-btn" onclick="copyText('2-2-23 Segashira, Miyazaki 880-0867',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>おぐら瀬頭店</span><button class="copy-btn" onclick="copyText('おぐら瀬頭店',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>Ogura Segashira-ten</span><button class="copy-btn" onclick="copyText('Ogura Segashira-ten',this,event)">복사</button></span></div>
                 <div class="info-label">전화</div>
                 <div class="info-value"><span class="copy-wrap"><span>0985-23-5301</span><button class="copy-btn" onclick="copyText('0985-23-5301',this,event)">복사</button></span></div>
                 <div class="info-label">영업</div>
@@ -2392,7 +2806,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
               </div>
               <div class="tip-box" style="border-color:#27AE60;background:#fff;">
                 <div class="tip-title">⭐ 미야자키 마지막 저녁</div>
-                Aoshima 호텔(31.80°N) → Ogura 세가시라(31.92°N) 약 30분 북쪽. 18:00 早 입장 → 19:30 종료 → 20:00 호텔 복귀 → 21:00 취침. 본점 동일 본가 레시피 + 35대 주차 → 가족 1순위 🍗
+                Aoshima 호텔(31.80°N) → Ogura 세가시라(31.92°N) 약 30분 북쪽. 18:00 일찍 입장 → 19:30 종료 → 20:00 호텔 복귀 → 21:00 취침. 본점 동일 본가 레시피 + 35대 주차 → 가족 1순위 🍗
               </div>
             </div>
           </div>
@@ -2521,7 +2935,7 @@ a:hover { color: var(--primary-light); text-decoration: underline; text-underlin
                 <div class="info-label">주소</div>
                 <div class="info-value"><span class="copy-wrap"><span>862-1 Eguchi, Shinbeppu-cho, Miyazaki 880-0834</span><button class="copy-btn" onclick="copyText('862-1 Eguchi, Shinbeppu-cho, Miyazaki 880-0834',this,event)">복사</button></span></div>
                 <div class="info-label">내비 (일본어)</div>
-                <div class="info-value"><span class="copy-wrap"><span>イオンモール宮崎</span><button class="copy-btn" onclick="copyText('イオンモール宮崎',this,event)">복사</button></span></div>
+                <div class="info-value"><span class="copy-wrap"><span>AEON Mall Miyazaki</span><button class="copy-btn" onclick="copyText('AEON Mall Miyazaki',this,event)">복사</button></span></div>
                 <div class="info-label">11:30~12:30</div>
                 <div class="info-value">푸드코트 점심 (키즈체어 + 기저귀교환대 완비)</div>
                 <div class="info-label">12:30~13:30</div>
