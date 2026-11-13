@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPIc D-7 스크립트</title>
+<style>
+:root{--bg:#faf9f5;--fg:#1f1e1d;--muted:#6b6a65;--line:#e3e1d9;--accent:#c96442;--card:#ffffff;--code:#f0eee6}
+@media (prefers-color-scheme: dark){:root{--bg:#1f1e1d;--fg:#ecebe6;--muted:#a3a29c;--line:#3a3936;--accent:#e08a6c;--card:#2a2927;--code:#2f2e2b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all}
+main{max-width:820px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:1.7rem;line-height:1.3;margin:.2em 0 .3em}
+h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-top:.6em;border-top:2px solid var(--accent)}
+h3{font-size:1.08rem;margin:1.6em 0 .4em;color:var(--accent)}
+p time{color:var(--muted)}
+.table-wrap{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;width:100%;background:var(--card);font-size:.93rem}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+pre{background:var(--code);padding:12px;border-radius:8px;overflow-x:auto;font-size:.85rem;line-height:1.45}
+code{font-family:ui-monospace,Menlo,Consolas,monospace}
+ul,ol{padding-left:1.4em}
+li{margin:.2em 0}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:1em 0}
+nav.toc a{color:var(--fg)}
+a{color:var(--accent)}
+</style>
+<style>
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:14px 0}
+.card h3{margin-top:0}
+.bone{display:inline-block;background:var(--code);border-radius:8px;padding:6px 10px;font-size:.92rem;margin:4px 0 10px}
+.en{font-size:1.02rem;line-height:1.75}
+.en b{color:var(--accent)}
+body.hide .en{filter:blur(6px);cursor:pointer}
+body.hide .en.peek{filter:none}
+.toggle{position:sticky;top:8px;z-index:5;display:block;margin:12px 0;padding:10px 14px;width:100%;border:0;border-radius:10px;background:var(--accent);color:#fff;font-size:1rem;font-weight:600}
+.today{border-left:4px solid var(--accent);padding-left:10px}
+tr.on td{background:var(--code);font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>OPIc D-7 스크립트 (11/13~11/20)</h1>
+<p>시험 11/20(금)까지 남은 7일 동안 볼 것만 모았어요. 문장을 통째로 외우기보다 <b>뼈대</b>를 보고 말하고, 막히면 스크립트를 확인하세요.</p>
+<nav class="toc"><strong>목차</strong><ul>
+<li><a href="#plan">7일 계획</a></li>
+<li><a href="#formula">답변 공식 · 연결 표현</a></li>
+<li><a href="#scripts">주제별 스크립트 6개</a></li>
+<li><a href="#roleplay">롤플레이 · 돌발</a></li>
+<li><a href="#fix">자주 하는 실수</a></li>
+<li><a href="#check">시험 직전 체크리스트</a></li>
+</ul></nav>
+
+<h2 id="plan">7일 계획</h2>
+<p>매일 쉐도잉 20분 → 스크립트 암기·변형 20분 → 녹음 후 다시 듣기 20분.</p>
+<div class="table-wrap"><table><thead><tr><th>날짜</th><th>오늘 할 일</th><th>산출물</th></tr></thead><tbody>
+<tr data-d="2026-11-13"><td>11/13(금) D-7</td><td>롤플레이 3종 연습, 질문하는 문장 암기</td><td>롤플레이 녹음</td></tr>
+<tr data-d="2026-11-14"><td>11/14(토) D-6</td><td>돌발 주제 5개 즉석 답변, 모의 7문항</td><td>모의 녹음 7개</td></tr>
+<tr data-d="2026-11-15"><td>11/15(일) D-5</td><td>모의 15문항 1회차 (40분 타이머), 녹음 전체 듣고 약점 3개 정리</td><td>모의 1회차</td></tr>
+<tr data-d="2026-11-16"><td>11/16(월) D-4</td><td>약점 3개 집중 교정 (아래 &lsquo;자주 하는 실수&rsquo; 참고)</td><td>교정 녹음</td></tr>
+<tr data-d="2026-11-17"><td>11/17(화) D-3</td><td>모의 15문항 2회차, 1회차와 비교</td><td>모의 2회차</td></tr>
+<tr data-d="2026-11-18"><td>11/18(수) D-2</td><td>스크립트 6개 최종 점검, 연결 표현 복습</td><td>최종 점검</td></tr>
+<tr data-d="2026-11-19"><td>11/19(목) D-1</td><td>가볍게 자기소개 + 롤플레이만, 체크리스트 확인, 일찍 수면</td><td>컨디션 관리</td></tr>
+<tr data-d="2026-11-20"><td>11/20(금) 시험</td><td>자기소개 1회 워밍업, 마이크·소음 점검</td><td>-</td></tr>
+</tbody></table></div>
+
+<h2 id="formula">답변 공식 · 연결 표현</h2>
+<p>어떤 질문이든 <b>도입 한 줄 → 디테일 2~3개 → 마무리 한 줄</b>. 한 문항 60~90초, 8~12문장이 목표예요.</p>
+<div class="table-wrap"><table><thead><tr><th>질문 유형</th><th>뼈대</th><th>시제</th></tr></thead><tbody>
+<tr><td>묘사</td><td>한 줄 요약 → 특징 3가지 → 내 느낌</td><td>현재</td></tr>
+<tr><td>습관·루틴</td><td>얼마나 자주 → 순서대로 단계 → 왜 좋은지</td><td>현재</td></tr>
+<tr><td>과거 경험</td><td>언제·어디서·누구와 → 사건 순서 → 결과·느낀 점</td><td>과거</td></tr>
+<tr><td>비교·변화</td><td>예전엔 → 지금은 → 바뀐 이유</td><td>과거+현재</td></tr>
+<tr><td>의견·계획</td><td>내 생각 → 이유 2개 → 앞으로 계획</td><td>현재+미래</td></tr>
+</tbody></table></div>
+<p><b>연결 표현 10개</b></p>
+<ul>
+<li>시작: <em>Well, let me think.</em> / <em>To be honest,</em> / <em>Actually,</em></li>
+<li>순서: <em>First of all,</em> / <em>After that,</em> / <em>Finally,</em></li>
+<li>이유: <em>The reason is that...</em> / <em>That's why...</em></li>
+<li>추가: <em>Also,</em> / <em>Another thing is that...</em></li>
+<li>마무리: <em>Overall, I really enjoy it.</em> / <em>It was a great memory for me.</em></li>
+</ul>
+<p><b>막혔을 때 채움말</b>: <em>How can I put it...</em> / <em>What I wanted to say is...</em> / <em>I mean,</em><br>
+단어가 안 떠오르면 쉬운 말로 풀기. 예: 서랍장 → <em>a small cabinet with drawers</em></p>
+
+<h2 id="scripts">주제별 스크립트 6개</h2>
+<button class="toggle" id="tg">영어 가리기 (뼈대만 보고 말하기)</button>
+<p style="color:var(--muted);font-size:.9rem">가린 상태에서 스크립트를 누르면 그 부분만 잠깐 보여요.</p>
+
+<div class="card"><h3>#1 자기소개 (1번 문항, 거의 확정)</h3>
+<div class="bone">뼈대: 직업 → 가족 → 취미 → 최근 일 → 시험 목표</div>
+<p class="en">Hi, my name is [이름], and I'm a software developer. I work at a company where I develop and manage an internal settlement system, so I spend most of my day at a computer. I live with my wife and my three-year-old son, Junhyuk. He is very energetic, so our home is never quiet! In my free time, I like watching movies and taking short walks with my family. Last month, I started thinking about rearranging our house, and I'm really excited about it. I'm taking this test because I want to improve my English speaking skill, and I hope to do well today. Thank you.</p></div>
+
+<div class="card"><h3>#2 우리 집 묘사</h3>
+<div class="bone">뼈대: 사는 곳 → 큰 방 → 컴퓨터방 → 좋아하는 이유 → 마무리 (계획으로 미래 시제 한 번)</div>
+<p class="en">I live in an apartment with my wife and my son. <b>The biggest room is our bedroom</b>, and it has a large bed in the middle. Actually, I'm planning to put up a partition wall there so that we can use the space better. <b>We also have a computer room, which is my favorite place.</b> It has my desk, a bookshelf, and a few of my son's books. The reason I like it is that it is quiet, so I can focus. Overall, it's not a big house, but it's cozy and comfortable for our family.</p></div>
+
+<div class="card"><h3>#3 직장 하루 루틴 (습관형)</h3>
+<div class="bone">뼈대: 기상 → 출근 → 오전 업무 → 오후 업무 → 퇴근, 이유</div>
+<p class="en"><b>On weekdays, I usually wake up at around seven.</b> First of all, I get ready and drop by a cafe for coffee. After that, I arrive at the office and check the system to see if there are any errors. <b>Then I spend the morning fixing problems and answering questions from other teams.</b> After lunch, I focus on development work, like writing new features. Finally, I leave the office at around six and go home to my family. The reason I like this routine is that I can feel productive, and I can still spend time with my son in the evening.</p></div>
+
+<div class="card"><h3>#4 가족과 보낸 주말 (과거 경험)</h3>
+<div class="bone">뼈대: 언제·어디서·누구와 → 날씨 → 사건 순서 → 결과·느낀 점 (전부 과거형)</div>
+<p class="en">Let me think. <b>Last weekend, I went to a park with my wife and my son.</b> The weather was really nice, so we decided to take a walk after lunch. When we arrived, my son saw a big playground and ran straight to it. <b>He played on the slide again and again, and he was laughing the whole time.</b> After that, we bought some ice cream and sat on a bench. Later, he fell asleep in the car on our way home. It was a simple day, but I felt really happy. That's why I remember it as a great memory.</p></div>
+
+<div class="card"><h3>#5 해외여행 (계획 + 과거 경험)</h3>
+<div class="bone">뼈대: 좋아하는 이유 → 미래 계획(be going to) → 과거 여행(과거형) → 기대</div>
+<p class="en">I love traveling abroad with my family. <b>This December, we're going to travel to Guam for the first time.</b> The reason I chose Guam is that it has beautiful beaches and it's good for a young child. I'm going to rent a car, and I'm planning to spend a lot of time at the beach. Actually, last year we went to Jeju Island, and it was a great trip. <b>We stayed at a hotel near the ocean, and my son built a sand castle for the first time.</b> Even though it rained on the second day, we had a wonderful time together. I'm really looking forward to the next trip.</p></div>
+
+<div class="card"><h3>#6 영화 보기 (습관 + 비교·변화)</h3>
+<div class="bone">뼈대: 빈도 → 방법 → 취향 → 예전 vs 지금(used to) → 이유</div>
+<p class="en"><b>I usually watch movies at home on weekends.</b> Since my son was born, it has been difficult to go to the theater, so I use a streaming service instead. After he falls asleep, my wife and I choose a movie together. I prefer action movies, and she likes romantic comedies, so we take turns. <b>A few years ago, I used to go to the cinema every month, but now I watch at home.</b> Actually, I think the home is more comfortable because I can pause the movie anytime. That's why I enjoy watching movies at home these days.</p></div>
+
+<h2 id="roleplay">롤플레이 · 돌발</h2>
+<p>롤플레이는 보통 3문항: ① 상대에게 질문하기 ② 문제 상황에서 대안 제시 ③ 비슷한 경험 말하기.</p>
+<div class="card"><h3>① 질문하기 (질문 3~5개)</h3>
+<p class="en">Hello, I'd like to ask a few questions about [주제]. <b>First, could you tell me what time/where it starts?</b> Also, how much does it cost? And is there anything I should bring? One more thing, do I need to make a reservation? Thank you so much.</p></div>
+<div class="card"><h3>② 문제 해결 (대안 2개)</h3>
+<p class="en">I'm so sorry to hear that, but don't worry. <b>There are two things we can do.</b> First, I can [대안 1]. If that doesn't work, then I can [대안 2]. Which one do you prefer? I'm sure we can solve this problem.</p>
+<p>예: 호텔 예약이 잘못됨 → <em>I can change to a different room type. / I can come back tomorrow at the same time.</em></p></div>
+<div class="card"><h3>③ 비슷한 경험 (과거형)</h3>
+<p class="en">Actually, something similar happened to me before. <b>It was last year when I [상황].</b> At first, I was [감정], but I [해결 방법]. In the end, it turned out okay, and I learned that [교훈].</p></div>
+<div class="card"><h3>돌발 주제 (은행, 기술, 약속, 재활용 등)</h3>
+<ol>
+<li><em>Well, that's a good question.</em> 으로 시간 벌기</li>
+<li>내 생활과 가장 가까운 경험 고르기 (기술 → 업무 시스템, 은행 → 모바일 뱅킹)</li>
+<li>습관형 또는 과거 경험 공식에 그대로 대입</li>
+<li>막히면 <em>It's difficult to explain, but...</em> 으로 쉬운 단어로 돌려 말하기</li>
+</ol></div>
+
+<h2 id="fix">자주 하는 실수</h2>
+<div class="table-wrap"><table><thead><tr><th>실수</th><th>예</th><th>교정</th></tr></thead><tbody>
+<tr><td>과거를 현재형으로</td><td><em>Yesterday I go to park.</em></td><td>과거 질문엔 첫 문장부터 <em>went, was, had</em></td></tr>
+<tr><td>단문 나열</td><td><em>I like movie. I watch at home.</em></td><td><em>because, so, and, but</em>으로 연결</td></tr>
+<tr><td>침묵</td><td>5초 이상 멈춤</td><td><em>Let me think...</em>, <em>How can I put it...</em></td></tr>
+<tr><td>단·복수, 관사</td><td><em>I have two cat.</em></td><td>숫자 뒤 -s, 처음은 <em>a</em>, 다시는 <em>the</em></td></tr>
+<tr><td>너무 짧게</td><td>20초 답변</td><td>디테일 2개 + 마무리 한 줄 추가</td></tr>
+<tr><td>완벽 추구</td><td>틀릴까 봐 중단</td><td>틀려도 끝까지, 자기교정은 한 번만</td></tr>
+</tbody></table></div>
+<p><b>과거 동사 15개</b>: went, was, had, saw, met, took, made, bought, ate, felt, decided, arrived, enjoyed, spent, started</p>
+
+<h2 id="check">시험 직전 체크리스트</h2>
+<p><b>전날 (11/19)</b></p>
+<ul>
+<li>응시 장소, 시간, 신분증 확인</li>
+<li>스크립트 6개 뼈대를 한 번씩 소리 내어 말하기 (새 내용 외우지 않기)</li>
+<li>7시간 이상 수면</li>
+</ul>
+<p><b>당일 (11/20)</b></p>
+<ul>
+<li>자기소개 1분 워밍업으로 크게 말하기</li>
+<li>설문은 연습한 주제 위주 (집, 영화, 음악, 걷기, 여행)</li>
+<li>난이도 1차는 4 정도, 2차는 어려웠으면 같거나 한 단계 낮게</li>
+<li>한 문항 60~90초, 마무리 한 줄로 끝내기</li>
+<li>못 알아들으면 한 번 다시 듣기</li>
+<li>막혀도 채움말로 이어가기, 틀린 건 넘어가기</li>
+</ul>
+</main>
+<script>
+(function(){
+  var b=document.body,t=document.getElementById('tg');
+  t.onclick=function(){b.classList.toggle('hide');t.textContent=b.classList.contains('hide')?'영어 보이기':'영어 가리기 (뼈대만 보고 말하기)';};
+  document.querySelectorAll('.en').forEach(function(p){p.onclick=function(){if(b.classList.contains('hide'))p.classList.toggle('peek');};});
+  var d=new Date(),k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  var r=document.querySelector('tr[data-d="'+k+'"]');if(r)r.classList.add('on');
+})();
+</script>
+</body>
+</html>
